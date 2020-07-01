@@ -1,6 +1,13 @@
 <?php
 // показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+$show_complete_tasks = rand(0, 1) ;
+if ($show_complete_tasks == checked)
+{
+    $show_complete_tasks=true;
+}
+else{
+    $show_complete_tasks=false;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -147,7 +154,6 @@ $show_complete_tasks = rand(0, 1);
                 </svg>
             </a>
         </div>
-
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
 
@@ -157,7 +163,6 @@ $show_complete_tasks = rand(0, 1);
         </div>
     </div>
 </footer>
-
 <script src="flatpickr.js"></script>
 <script src="script.js"></script>
 </body>
