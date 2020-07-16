@@ -2,42 +2,42 @@
 // показывать или нет выполненные задачи
 $show_complete_tasks=rand(0,1);
 $of_projects = ["Входящие","Учеба","Работа","Домашние дела","Авто"];
-$tabl = [
+$task_table = [
     [
-        'Задача' => 'Собеседование в IT компании',
-        'Дата выполнения' => '01.12.2019',
-        'Категория' => 'Работа',
-        'Выполнен' => 'false'
+        'Task' => 'Собеседование в IT компании',
+        'Date_of_completion' => '01.12.2019',
+        'Category' => 'Работа',
+        'Completed' => 'false'
     ],
     [
-        'Задача' => 'Выполнить тестовое задание',
-        'Дата выполнения' => '25.12.2019',
-        'Категория' => 'Работа',
-        'Выполнен' => 'false'
+        'Task' => 'Выполнить тестовое задание',
+        'Date_of_completion' => '25.12.2019',
+        'Category' => 'Работа',
+        'Completed' => 'false'
     ],
     [
-        'Задача' => 'Сделать задание первого раздела',
-        'Дата выполнения' => '21.12.2019',
-        'Категория' => 'Учеба',
-        'Выполнен' => 'true'
+        'Task' => 'Сделать задание первого раздела',
+        'Date_of_completion' => '21.12.2019',
+        'Category' => 'Учеба',
+        'Completed' => 'true'
     ],
     [
-        'Задача' => 'Встреча с другом',
-        'Дата выполнения' => '22.12.2019',
-        'Категория' => 'Входящие',
-        'Выполнен' => 'false'
+        'Task' => 'Встреча с другом',
+        'Date_of_completion' => '22.12.2019',
+        'Category' => 'Входящие',
+        'Completed' => 'false'
     ],
     [
-        'Задача' => 'Купить корм для кота',
-        'Дата выполнения' => 'null',
-        'Категория' => 'Домашние дела',
-        'Выполнен' => 'false'
+        'Task' => 'Купить корм для кота',
+        'Date_of_completion' => 'null',
+        'Category' => 'Домашние дела',
+        'Completed' => 'false'
     ],
     [
-        'Задача' => 'Заказать пиццу',
-        'Дата выполнения' => 'null',
-        'Категория' => 'Домашние дела',
-        'Выполнен' => 'false'
+        'Task' => 'Заказать пиццу',
+        'Date_of_completion' => 'null',
+        'Category' => 'Домашние дела',
+        'Completed' => 'false'
     ]
 ];
 ?>
@@ -60,7 +60,6 @@ $tabl = [
             </a>
             <div class="main-header__side">
                 <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
-
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__data">
                         <p>Константин</p>
@@ -74,15 +73,11 @@ $tabl = [
                 <h2 class="content__side-heading">Проекты</h2>
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php
-                        $index = 0;
-                        $num = count($of_projects);
-                        while ($index < $num) : ?>
                         <li class="main-navigation__list-item">
-                            <?=$of_projects[$index];?>
-                             <a class="main-navigation__list-item-link" href="#"><?php $index++;?></a>
-                            <span class="main-navigation__list-item-count">0</span>
-                            <?php endwhile; ?>
+                            <?php foreach ($of_projects as $key => $value) :?>
+                                <a class="main-navigation__list-item-link" href="#"><?php echo $value;?></a>
+                                <span class="main-navigation__list-item-count">0</span>
+                            <?php endforeach;?>
                         </li>
                     </ul>
                 </nav>
@@ -109,19 +104,28 @@ $tabl = [
                     </label>
                 </div>
                 <table class="tasks">
+                    <?php
+                        foreach ($task_table as $key2 => $value2):
+                    ?>
                     <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1) :?> checked <?php endif;?>>
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
+                                <span class="checkbox__text"><?=$value2['Task']?></span>
                             </label>
                         </td>
                         <td class="task__file">
                             <a class="download-link" href="#">Home.psd</a>
                         </td>
-                        <td class="task__date"></td>
+                        <td class="task__date">
+                            <?=$value2['Date_of_completion']?>
+                        </td>
+                        <td class="task__completed">
+                            <?=$value2['Completed']?>
+                        </td>
                     </tr>
                     <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
+                    <?php endforeach;?>
                 </table>
             </main>
         </div>
@@ -172,3 +176,15 @@ $tabl = [
                 </svg>
             </a>
         </div>
+        <div class="main-footer__developed-by">
+            <span class="visually-hidden">Разработано:</span>
+            <a href="https://htmlacademy.ru/intensive/php">
+                <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
+            </a>
+        </div>
+    </div>
+</footer>
+<script src="flatpickr.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
