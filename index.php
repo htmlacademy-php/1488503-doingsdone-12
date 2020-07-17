@@ -87,7 +87,7 @@ $task_table = [
             <main class="content__main">
                 <h2 class="content__main-heading">Список задач</h2>
                 <form class="search-form" action="index.php" method="post" autocomplete="off">
-                    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+                    <input class="search-form__input" type="text" namef="" value="" placeholder="Поиск по задачам">
                     <input class="search-form__submit" type="submit" name="" value="Искать">
                 </form>
                 <div class="tasks-controls">
@@ -107,6 +107,9 @@ $task_table = [
                     <?php
                         foreach ($task_table as $key2 => $value2):
                     ?>
+                        <?php  if ($show_complete_tasks==1){
+                            continue;
+                        }?>
                     <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
