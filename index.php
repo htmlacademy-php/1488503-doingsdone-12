@@ -1,43 +1,43 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks=rand(0,1);
-$of_projects = ["Входящие","Учеба","Работа","Домашние дела","Авто"];
+$of_projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто", ];
 $task_table = [
     [
         'Task' => 'Собеседование в IT компании',
         'Date_of_completion' => '01.12.2019',
         'Category' => 'Работа',
-        'Completed' => 'false'
+        'Completed' => false,
     ],
     [
         'Task' => 'Выполнить тестовое задание',
         'Date_of_completion' => '25.12.2019',
         'Category' => 'Работа',
-        'Completed' => 'false'
+        'Completed' => false,
     ],
     [
         'Task' => 'Сделать задание первого раздела',
         'Date_of_completion' => '21.12.2019',
         'Category' => 'Учеба',
-        'Completed' => 'true'
+        'Completed' => true,
     ],
     [
         'Task' => 'Встреча с другом',
         'Date_of_completion' => '22.12.2019',
         'Category' => 'Входящие',
-        'Completed' => 'false'
+        'Completed' => false,
     ],
     [
         'Task' => 'Купить корм для кота',
         'Date_of_completion' => 'null',
         'Category' => 'Домашние дела',
-        'Completed' => 'false'
+        'Completed' => false,
     ],
     [
         'Task' => 'Заказать пиццу',
         'Date_of_completion' => 'null',
         'Category' => 'Домашние дела',
-        'Completed' => 'false'
+        'Completed' => false,
     ]
 ];
 ?>
@@ -73,12 +73,12 @@ $task_table = [
                 <h2 class="content__side-heading">Проекты</h2>
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
+                        <?php foreach ($of_projects as $item):?>
                         <li class="main-navigation__list-item">
-                            <?php foreach ($of_projects as $key => $value) :?>
-                                <a class="main-navigation__list-item-link" href="#"><?php echo $value;?></a>
-                                <span class="main-navigation__list-item-count">0</span>
-                            <?php endforeach;?>
+                            <a class="main-navigation__list-item-link" href="#"><?=$item?></a>
+                            <span class="main-navigation__list-item-count">0</span>
                         </li>
+                        <?php endforeach; ?>
                     </ul>
                 </nav>
                 <a class="button button--transparent button--plus content__side-button"
@@ -104,27 +104,26 @@ $task_table = [
                     </label>
                 </div>
                 <table class="tasks">
-                    <?php
-                        foreach ($task_table as $key2 => $value2):
-                    ?>
-                        <?php  if ($show_complete_tasks==1){
-                            continue;
+                    <?php foreach ($task_table as $item):?>
+                    <!-- если показывает задание, иначе не показывает-->
+                    <?php if($show_complete_tasks == 0){
+                       continue;
                         }?>
                     <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1) :?> checked <?php endif;?>>
-                                <span class="checkbox__text"><?=$value2['Task']?></span>
+                                <span class="checkbox__text"><?=$item['Task']?></span>
                             </label>
                         </td>
                         <td class="task__file">
                             <a class="download-link" href="#">Home.psd</a>
                         </td>
                         <td class="task__date">
-                            <?=$value2['Date_of_completion']?>
+                            <?=$item['Date_of_completion']?>
                         </td>
                         <td class="task__completed">
-                            <?=$value2['Completed']?>
+                            <?=$item['Completed']?>
                         </td>
                     </tr>
                     <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
