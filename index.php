@@ -79,6 +79,9 @@ $task_table = [
                                 <span class="main-navigation__list-item-count">
 <!--                                список задач в виде массива;-->
                                 <?php
+                                 function($item, $task_table){
+//                                     ??????
+                                 }
                                 echo  count($task_table);
                                 ?>
                             </span>
