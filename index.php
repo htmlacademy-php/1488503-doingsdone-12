@@ -79,10 +79,37 @@ $task_table = [
                                 <span class="main-navigation__list-item-count">
 <!--                                список задач в виде массива;-->
                                 <?php
-                                 function($item, $task_table){
-//                                     ??????
-                                 }
-                                echo  count($task_table);
+                                    $res = $task_table;
+                                    if ($show_complete_tasks == 1){
+                                        echo count($res);
+                                    }else{
+                                        echo  0;
+                                    }
+//                                        function proects($res){
+//                                            global $of_projects;
+//                                            global $task_table;
+//                                            return $of_projects[$res] + $task_table[$res];
+//                                        }
+//                                        function proects($res){
+//                                            global $task_table;
+//                                            return $task_table[$res];
+//                                        }
+//                                    echo count($of_projects+$task_table);
+                                //   function proects($n){
+//                                        return $n * $n;
+//                                    }
+//                                    $count = proects(4);
+//                                    echo $count;
+//                                echo  count($of_projects + $task_table);
+//                                function proects($proects){
+//                                    global $of_projects;
+//                                    return $of_projects[$proects];
+//
+//                                    foreach ($proects as $v)
+//                                        echo count($v) ;
+//                                }
+//                                echo proects();
+//                                proects('Машина','Самолет','Пароход','Мотоцикл');
                                 ?>
                             </span>
                             </li>
