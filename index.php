@@ -3,37 +3,37 @@
 $show_complete_tasks=rand(0,1);
 $of_projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто", ];
 $task_table = [
-    1 =>[
+    [
         'Task' => 'Собеседование в IT компании',
         'Date_of_completion' => '01.12.2019',
         'Category' => 'Работа',
         'Completed' => false,
     ],
-    2 =>[
+    [
         'Task' => 'Выполнить тестовое задание',
         'Date_of_completion' => '25.12.2019',
         'Category' => 'Работа',
         'Completed' => false,
     ],
-    3 =>[
+    [
         'Task' => 'Сделать задание первого раздела',
         'Date_of_completion' => '21.12.2019',
         'Category' => 'Учеба',
         'Completed' => true,
     ],
-    4 =>[
+    [
         'Task' => 'Встреча с другом',
         'Date_of_completion' => '22.12.2019',
         'Category' => 'Входящие',
         'Completed' => false,
     ],
-    5 =>[
+    [
         'Task' => 'Купить корм для кота',
         'Date_of_completion' => 'null',
         'Category' => 'Домашние дела',
         'Completed' => false,
     ],
-    6 =>[
+    [
         'Task' => 'Заказать пиццу',
         'Date_of_completion' => 'null',
         'Category' => 'Домашние дела',
@@ -79,37 +79,11 @@ $task_table = [
                                 <span class="main-navigation__list-item-count">
 <!--                                список задач в виде массива;-->
                                 <?php
-                                    $res = $task_table;
-                                    if ($show_complete_tasks == 1){
-                                        echo count($res);
-                                    }else{
-                                        echo  0;
-                                    }
-//                                        function proects($res){
-//                                            global $of_projects;
-//                                            global $task_table;
-//                                            return $of_projects[$res] + $task_table[$res];
-//                                        }
-//                                        function proects($res){
-//                                            global $task_table;
-//                                            return $task_table[$res];
-//                                        }
-//                                    echo count($of_projects+$task_table);
-                                //   function proects($n){
-//                                        return $n * $n;
-//                                    }
-//                                    $count = proects(4);
-//                                    echo $count;
-//                                echo  count($of_projects + $task_table);
-//                                function proects($proects){
-//                                    global $of_projects;
-//                                    return $of_projects[$proects];
-//
-//                                    foreach ($proects as $v)
-//                                        echo count($v) ;
-//                                }
-//                                echo proects();
-//                                proects('Машина','Самолет','Пароход','Мотоцикл');
+                                   if($show_complete_tasks==1){
+                                       echo count($task_table);
+                                   }else{
+                                       continue;
+                                   }
                                 ?>
                             </span>
                             </li>
@@ -160,6 +134,7 @@ $task_table = [
                             <td class="task__completed">
                                 <?=$item['Completed']?>
                             </td>
+
                         </tr>
                         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
                     <?php endforeach;?>
