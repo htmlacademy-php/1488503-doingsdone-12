@@ -40,6 +40,16 @@ $task_table = [
         'Completed' => false,
     ]
 ];
+function getArrCount($arr, $depth = 1)
+{
+    if (!is_array($arr) || !$depth) return 0;
+
+    $res = count($arr);
+    foreach ($arr as $in_ar)
+        $res += getArrCount($in_ar, $depth -1);
+
+    return $res;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -75,17 +85,8 @@ $task_table = [
                     <ul class="main-navigation__list">
                         <?php foreach ($of_projects as $item):?>
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#"><?=$item?></a>
-                                <span class="main-navigation__list-item-count">
-<!--                                список задач в виде массива;-->
-                                <?php
-                                   if($show_complete_tasks==1){
-                                       echo count($task_table);
-                                   }else{
-                                       continue;
-                                   }
-                                ?>
-                            </span>
+                                <a class="main-navigation__list-item-link" href="#"><?= $item?></a>
+                                <span class="main-navigation__list-item-count"><?=getArrCount($task_table,$show_complete_tasks)?></span>
                             </li>
                         <?php endforeach;?>
                     </ul>
@@ -134,7 +135,6 @@ $task_table = [
                             <td class="task__completed">
                                 <?=$item['Completed']?>
                             </td>
-
                         </tr>
                         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
                     <?php endforeach;?>
