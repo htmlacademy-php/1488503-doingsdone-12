@@ -118,8 +118,7 @@ function getArrayCount ($tasks, $category){
                     <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"
-                                    <?php if ($show_complete_tasks == 1):?> checked <?php endif;?>>
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1):?> checked <?php endif;?>>
                                 <span class="checkbox__text"><?=$item['task']?></span>
                             </label>
                         </td>
