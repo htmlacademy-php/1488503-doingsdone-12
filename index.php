@@ -1,8 +1,8 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks=rand(0,1);
-$category = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто",];
-$task = [
+$categories = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто",];
+$tasks = [
     [
         'task' => 'Собеседование в IT компании',
         'date_of_completion' => '01.12.2019',
@@ -82,10 +82,10 @@ function getArrayCount ($tasks, $category){
                 <h2 class="content__side-heading">Проекты</h2>
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($category as $item):?>
+                        <?php foreach ($categories as $item):?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?=$item?></a>
-                            <span class="main-navigation__list-item-count"><?=getArrayCount($task, $item);?></span>
+                            <span class="main-navigation__list-item-count"><?=getArrayCount($tasks, $item);?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -108,14 +108,13 @@ function getArrayCount ($tasks, $category){
                     </nav>
                     <label class="checkbox">
                         <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <?php if ($show_complete_tasks == 1):?><?php endif;?>
+                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks == 1) :?> checked <?php endif;?>>
                         <input class="checkbox__input visually-hidden show_completed" type="checkbox">
                         <span class="checkbox__text" >Показывать выполненные</span>
                     </label>
                 </div>
                 <table class="tasks">
-                    <?php foreach ($task as $item) :?>
-                    <?php if ($show_complete_tasks == 0)continue;?>
+                    <?php foreach ($tasks as $item) :?>
                     <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
