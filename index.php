@@ -40,7 +40,7 @@ $tasks = [
         'completed' => false,
     ]
 ];
-function getArrayCount ($tasks, $categories){
+function countTasksForCategory ($tasks, $categories){
     $count = 0;
     foreach ($tasks as $task){
         if ($task['category'] === $categories){
@@ -85,7 +85,7 @@ function getArrayCount ($tasks, $categories){
                         <?php foreach ($categories as $item):?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?=$item?></a>
-                            <span class="main-navigation__list-item-count"><?=getArrayCount($tasks, $item);?></span>
+                            <span class="main-navigation__list-item-count"><?=countTasksForCategory($tasks, $item);?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
