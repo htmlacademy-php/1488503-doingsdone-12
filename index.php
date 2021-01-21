@@ -40,10 +40,10 @@ $tasks = [
         'completed' => false,
     ]
 ];
-function countTasksForCategory ($tasks, $categories){
+function countTasksForCategory($tasks, $category){
     $count = 0;
     foreach ($tasks as $task){
-        if ($task['category'] === $categories){
+        if ($task['category'] === $category){
             $count++;
         }
     }
