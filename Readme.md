@@ -1,7 +1,7 @@
 # Личный проект «Дела в Порядке»
 
 * Студент: [Виктор Объедков](https://up.htmlacademy.ru/php/12/user/1488503).
-* Наставник:  [Данил Пятницев] (https://htmlacademy.ru/profile/id1100441).
+* Наставник:  [Сергей Рожков] (https://htmlacademy.ru/profile/id1069033).
 
 ---
 
