@@ -54,8 +54,7 @@ function countTasksForCategory($tasks, $category){
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Дела в порядке</title>
-    <?=$title; ?>
+    <title><?= $title; ?></title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
@@ -78,7 +77,7 @@ function countTasksForCategory($tasks, $category){
                 </div>
             </div>
         </header>
-        <?php print $content?>
+        <div class="content"><?print ($content); ?></div>
     </div>
 </div>
 <footer class="main-footer">
