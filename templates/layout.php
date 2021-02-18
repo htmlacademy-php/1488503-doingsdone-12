@@ -1,3 +1,8 @@
+<?php
+include('templates/main.php');
+include_template('main.php', ['content' => $content]);
+//include_template('index.php', ['categories' => $categories]);
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>

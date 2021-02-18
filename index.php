@@ -1,7 +1,8 @@
 <?php
-
+include('templates/layout.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+$title = "Дела в порядке";
 $categories = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто",];
 $tasks = [
     [
@@ -51,9 +52,7 @@ function countTasksForCategory($tasks, $category)
     }
     return $count;
 }
-
-include('templates/layout.php');
-include ("templates/main.php");
+include_template('layout.php', ['categories' => $categories, 'tasks'=>$tasks]);
+//include ("templates/main.php");
 //HTML-код главной страницы
-echo include_template('main',"categories => $categories, tasks => $tasks,");
-echo include_template('layout.php', "title => $title, content => $content");
+
