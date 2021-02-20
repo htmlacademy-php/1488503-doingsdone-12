@@ -4,7 +4,7 @@
         <ul class="main-navigation__list">
             <?php foreach ($categories as $item):?>
                 <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link" href="#"><?=$item?></a>
+                    <a class="main-navigation__list-item-link" href="#"><?=htmlspecialchars($item);?></a>
                     <span class="main-navigation__list-item-count"><?=countTasksForCategory($tasks, $item);?></span>
                 </li>
             <?php endforeach; ?>
@@ -38,17 +38,17 @@
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1):?> checked <?php endif;?>>
-                        <span class="checkbox__text"><?=$item['task']?></span>
+                        <span class="checkbox__text"><?= htmlspecialchars($item['task']);?></span>
                     </label>
                 </td>
                 <td class="task__file">
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
                 <td class="task__date">
-                    <?=$item['date_of_completion'];?>
+                    <?=htmlspecialchars($item['date_of_completion']);?>
                 </td>
                 <td class="task__completed">
-                    <?=$item['completed'];?>
+                    <?=htmlspecialchars($item['completed']);?>
                 </td>
             </tr>
         <?php endforeach;?>
