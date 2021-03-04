@@ -50,6 +50,14 @@
                 <td class="task__completed">
                     <?=htmlspecialchars($item['completed']);?>
                 </td>
+                <?php
+                    $ny_date = strtotime($item['date_of_completion']);
+                    $currentDate = time();
+                    $seconds_left =  $currentDate - $ny_date;
+                    if ($seconds_left <= 86400){
+                        echo '<td class = "task--important"  style="background: red;">' . date('Y-m-d H:i:s', $seconds_left) . '</td>' ;
+                    }
+                ?>
             </tr>
         <?php endforeach;?>
         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->

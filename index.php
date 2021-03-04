@@ -6,7 +6,7 @@ $categories = ["Входящие", "Учеба", "Работа", "Домашни
 $tasks = [
     [
         'task' => 'Собеседование в IT компании',
-        'date_of_completion' => '01.12.2019',
+        'date_of_completion' => '04.03.2021',
         'category' => 'Работа',
         'completed' => false,
     ],
@@ -20,7 +20,7 @@ $tasks = [
         'task' => 'Сделать задание первого раздела',
         'date_of_completion' => '21.12.2019',
         'category' => 'Учеба',
-        'completed' => true,
+        'completed' => false,
     ],
     [
         'task' => 'Встреча с другом',
@@ -54,4 +54,3 @@ function countTasksForCategory($tasks, $category)
 $mainContent = include_template('main.php',['categories' => $categories, 'tasks'=> $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы
-
