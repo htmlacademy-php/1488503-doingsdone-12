@@ -20,7 +20,7 @@ $tasks = [
         'task' => 'Сделать задание первого раздела',
         'date_of_completion' => '21.12.2019',
         'category' => 'Учеба',
-        'completed' => true,
+        'completed' => false,
     ],
     [
         'task' => 'Встреча с другом',
