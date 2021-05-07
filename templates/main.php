@@ -34,7 +34,11 @@
     </div>
     <table class="tasks">
         <?php foreach ($tasks as $item) :?>
-            <tr class="tasks__item task">
+            <?php
+                $data = strtotime($item['date_of_completion']);
+                $resultData = ($data - time()) / 3600;
+            ?>
+            <tr class="tasks__item task <?php if($resultData <= 24): ?>task--important <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1):?> checked <?php endif;?>>
@@ -44,8 +48,7 @@
                 <td class="task__file">
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
-                <td class="task__date">
-                    <?=htmlspecialchars($item['date_of_completion']);?>
+                <td class="task__date"><?=htmlspecialchars($item['date_of_completion']);?>
                 </td>
                 <td class="task__completed">
                     <?=htmlspecialchars($item['completed']);?>
