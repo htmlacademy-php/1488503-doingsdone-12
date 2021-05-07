@@ -44,8 +44,11 @@
                 <td class="task__file">
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
-                <td class="task__date">
-                    <?=htmlspecialchars($item['date_of_completion']);?>
+                <?php
+                    $data = strtotime($item['date_of_completion']);
+                    $resultData = ($data - time()) / 3600;
+                ?>
+                <td class="task__date <?php if($resultData <= 24): ?>task--important <?php endif; ?>"><?=htmlspecialchars($item['date_of_completion']);?>
                 </td>
                 <td class="task__completed">
                     <?=htmlspecialchars($item['completed']);?>
