@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Время создания: Май 12 2021 г., 18:26
--- Версия сервера: 10.4.18-MariaDB
--- Версия PHP: 7.4.18
+-- Хост: 127.0.0.1:3306
+-- Время создания: Май 18 2021 г., 18:33
+-- Версия сервера: 8.0.19
+-- Версия PHP: 7.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,29 +20,35 @@ SET time_zone = "+00:00";
 --
 -- База данных: `things_are_in_order`
 --
+CREATE DATABASE things_are_in_order;
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `project`
+--
+
+CREATE TABLE `project` (
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `create_task` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `search__tasks`
+-- Структура таблицы `task`
 --
 
-CREATE TABLE `search__tasks` (
-  `id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `tasks`
---
-
-CREATE TABLE `tasks` (
-  `id` int(11) NOT NULL,
-  `task__select` varchar(200) NOT NULL,
-  `task__file` varchar(200) NOT NULL,
-  `task__date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `task` (
+  `data_add` timestamp NOT NULL,
+  `status` int NOT NULL,
+  `name_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `term_data` timestamp NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `create_task_id` int UNSIGNED NOT NULL,
+  `project_id` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -51,57 +57,39 @@ CREATE TABLE `tasks` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `email` varchar(225) DEFAULT NULL,
-  `password` char(64) DEFAULT NULL,
-  `name` char(255) DEFAULT NULL,
-  `date_create` timestamp NULL DEFAULT NULL,
-  `date_update` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int UNSIGNED NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `password` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `name` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `date_create` timestamp NOT NULL,
+  `date_update` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `search__tasks`
+-- Индексы таблицы `project`
 --
-ALTER TABLE `search__tasks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `tasks`
---
-ALTER TABLE `tasks`
+ALTER TABLE `project`
   ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
-  ADD UNIQUE KEY `users_id_uindex` (`id`);
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
 --
--- AUTO_INCREMENT для таблицы `search__tasks`
+-- AUTO_INCREMENT для таблицы `project`
 --
-ALTER TABLE `search__tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `tasks`
---
-ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `project`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
