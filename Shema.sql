@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `users`
 (
     `id`          int          NOT NULL AUTO_INCREMENT,
     `email`       varchar(255) NOT NULL,
-    `password`    char(64)     NOT NULL,
-    `name`        char(255)    NOT NULL,
+    `password`    varchar(64)     NOT NULL,
+    `name`        varchar(255)    NOT NULL,
     `date_create` timestamp    NULL DEFAULT NULL,
     `date_update` timestamp    NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
