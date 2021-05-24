@@ -1,114 +1,67 @@
--- phpMyAdmin SQL Dump
--- version 5.0.4
--- https://www.phpmyadmin.net/
---
--- Хост: 127.0.0.1:3306
--- Время создания: Май 23 2021 г., 20:21
--- Версия сервера: 8.0.19
--- Версия PHP: 7.1.33
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- --------------------------------------------------------
+-- Хост:                         127.0.0.1
+-- Версия сервера:               8.0.19 - MySQL Community Server - GPL
+-- Операционная система:         Win64
+-- HeidiSQL Версия:              11.2.0.6213
+-- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- База данных: `things_are_in_order`
---
-CREATE DATABASE IF NOT EXISTS things_are_in_order;
--- --------------------------------------------------------
 
---
--- Структура таблицы `projects`
---
+-- Дамп структуры базы данных things_are_in_order
+CREATE DATABASE IF NOT EXISTS `things_are_in_order` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `things_are_in_order`;
 
-CREATE TABLE `projects` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL
+-- Дамп структуры для таблица things_are_in_order.projects
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
+-- Дамп данных таблицы things_are_in_order.projects: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
+/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 
---
--- Структура таблицы `tasks`
---
-
-CREATE TABLE `tasks` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `file` varchar(255) NOT NULL,
-  `data_term` timestamp NOT NULL,
+-- Дамп структуры для таблица things_are_in_order.tasks
+CREATE TABLE IF NOT EXISTS `tasks` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `project_id` int unsigned NOT NULL,
+  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `data_add` timestamp NOT NULL,
-  `status` int NOT NULL
+  `data_term` timestamp NULL DEFAULT NULL,
+  `status` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
+-- Дамп данных таблицы things_are_in_order.tasks: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 
---
--- Структура таблицы `users`
---
-
-CREATE TABLE `users` (
-  `id` int NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` char(64) DEFAULT NULL,
-  `name` char(255) DEFAULT NULL,
-  `date_create` timestamp NOT NULL,
-  `date_update` timestamp NOT NULL
+-- Дамп структуры для таблица things_are_in_order.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `name` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `date_create` timestamp NULL DEFAULT NULL,
+  `date_update` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Индексы сохранённых таблиц
---
+-- Дамп данных таблицы things_are_in_order.users: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
---
--- Индексы таблицы `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `tasks`
---
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT для сохранённых таблиц
---
-
---
--- AUTO_INCREMENT для таблицы `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `tasks`
---
-ALTER TABLE `tasks`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-COMMIT;
-
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
