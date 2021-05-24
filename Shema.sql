@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
   `project_id` int unsigned NOT NULL,
-  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `file` varchar(255) DEFAULT NULL,
   `data_add` timestamp NOT NULL,
   `data_term` timestamp NULL DEFAULT NULL,
-  `status` int DEFAULT NULL,
+  `status` int DEFAULT 0 NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 -- Дамп структуры для таблица things_are_in_order.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `password` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `name` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` char(64) NOT NULL,
+  `name` char(255) NOT NULL,
   `date_create` timestamp NULL DEFAULT NULL,
   `date_update` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
