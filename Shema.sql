@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `tasks`
     `id`         int unsigned NOT NULL AUTO_INCREMENT,
     `user_id`    int unsigned NOT NULL,
     `project_id` int unsigned NOT NULL,
+    `name`       varchar(255) NOT NULL,
     `file`       varchar(255)      DEFAULT NULL,
     `data_add`   timestamp    NOT NULL,
     `data_term`  timestamp    NULL DEFAULT NULL,
