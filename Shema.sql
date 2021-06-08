@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS `tasks`
     `project_id` int unsigned NOT NULL,
     `name`       varchar(255) NOT NULL,
     `file`       varchar(255)      DEFAULT NULL,
-    `data_add`   timestamp    NOT NULL,
-    `data_term`  timestamp    NULL DEFAULT NULL,
+    `date_add`   timestamp    NOT NULL,
+    `date_term`  timestamp    NULL DEFAULT NULL,
     `status`     int          NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
