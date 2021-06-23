@@ -2,10 +2,10 @@
     <h2 class="content__side-heading">Проекты</h2>
     <nav class="main-navigation">
         <ul class="main-navigation__list">
-            <?php foreach ($categories as $item):?>
+            <?php foreach ($categories as $item): ?>
                 <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link" href="#"><?=htmlspecialchars($item);?></a>
-                    <span class="main-navigation__list-item-count"><?=countTasksForCategory($tasks, $item);?></span>
+                    <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item); ?></a>
+                    <span class="main-navigation__list-item-count"><?= countTasksForCategory($tasks, $item); ?></span>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -28,33 +28,34 @@
         </nav>
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks == 1) :?> checked <?php endif;?>>
-            <span class="checkbox__text" >Показывать выполненные</span>
+            <input class="checkbox__input visually-hidden show_completed"
+                   type="checkbox" <?php if ($show_complete_tasks == 1) : ?> checked <?php endif; ?>>
+            <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>
     <table class="tasks">
-        <?php foreach ($tasks as $item) :?>
+        <?php foreach ($tasks as $item) : ?>
             <?php
-                $data = strtotime($item['date_of_completion']);
-                $resultData = ($data - time()) / 3600;
+            $data = strtotime($item['date_of_completion']);
+            $resultData = ($data - time()) / 3600;
             ?>
-            <tr class="tasks__item task <?php if($resultData <= 24): ?>task--important <?php endif; ?>">
+            <tr class="tasks__item task
+                <?php if ($resultData <= 24): ?>task--important <?php endif; ?>
+                <?php if ($item['completed'] == 1): ?> task--completed <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($show_complete_tasks == 1):?> checked <?php endif;?>>
-                        <span class="checkbox__text"><?= htmlspecialchars($item['task']);?></span>
+                        <input class="checkbox__input visually-hidden task__checkbox"
+                               type="checkbox" <?php if ($item['completed'] == 1): ?> checked <?php endif; ?>>
+                        <span class="checkbox__text"><?= htmlspecialchars($item['task']); ?></span>
                     </label>
                 </td>
                 <td class="task__file">
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
-                <td class="task__date"><?=htmlspecialchars($item['date_of_completion']);?>
-                </td>
-                <td class="task__completed">
-                    <?=htmlspecialchars($item['completed']);?>
+                <td class="task__date"><?= htmlspecialchars($item['date_of_completion']); ?>
                 </td>
             </tr>
-        <?php endforeach;?>
+        <?php endforeach; ?>
         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
     </table>
 </main>
