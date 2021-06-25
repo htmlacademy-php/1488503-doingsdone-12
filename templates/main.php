@@ -4,8 +4,11 @@
         <ul class="main-navigation__list">
             <?php foreach ($categories as $item): ?>
                 <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($item); ?></a>
-                    <span class="main-navigation__list-item-count"><?= countTasksForCategory($tasks, $item); ?></span>
+                    <a class="main-navigation__list-item-link"
+                       href="/?project_id=<?= $item['project_id'] ?>"><?= htmlspecialchars($item['name']); ?>
+                    <a class="main-navigation__list-item--active" href=""></a>
+                    <span
+                        class="main-navigation__list-item-count"><?= countTasksForCategory($tasks, $item['project_id']); ?></span>
                 </li>
             <?php endforeach; ?>
         </ul>
