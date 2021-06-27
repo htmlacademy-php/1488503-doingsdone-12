@@ -19,7 +19,7 @@ $conn->set_charset("utf8");
 
 //Взял из базы данных название проекты
 $userId = intval($_GET['project_id']);
-$sqlProject = 'SELECT * FROM projects WHERE ' . $userId = true;
+$sqlProject = 'SELECT * FROM projects ';
 
 $result = mysqli_query($conn, $sqlProject);
 $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -35,13 +35,12 @@ foreach ($rows as $row) {
 }
 
 
-
-$projectId = $_GET['project_id'];
-if (!empty($_GET['project_id'])){
+$sqlUsers = "SELECT * FROM tasks";
 // Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
-
+if (!empty($_GET['project_id'])) {
+    $projectId = $_GET['project_id'];
+    $resultSQL =  $sqlUsers . " WHERE project_id = " . $projectId;
 }
-$sqlUsers = "SELECT * FROM tasks WHERE project_id = " . $projectId;
 $result2 = mysqli_query($conn, $sqlUsers);
 $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
