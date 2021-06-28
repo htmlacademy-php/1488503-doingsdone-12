@@ -1,14 +1,16 @@
+<!--main-navigation__list-item--active-->
 <section class="content__side">
     <h2 class="content__side-heading">Проекты</h2>
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($categories as $item): ?>
                 <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link"
-                       href="/?project_id=<?= $item['project_id'] ?>"><?= htmlspecialchars($item['name']); ?>
-                    <a class="main-navigation__list-item--active" href=""></a>
-                    <span
-                        class="main-navigation__list-item-count"><?= countTasksForCategory($tasks, $item['project_id']); ?></span>
+                    <a class="main-navigation__list-item-link <?php if ($item['project_id'] == $projectId): ?> main-navigation__list-item--active <?php endif ?>" href="/?project_id=<?= $item['project_id'] ?>">
+                        <?= htmlspecialchars($item['name']); ?>
+                        <span class="main-navigation__list-item-count">
+                            <?= countTasksForCategory($tasks, $item['project_id']); ?>
+                        </span>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>

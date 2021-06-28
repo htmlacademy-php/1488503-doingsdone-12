@@ -35,13 +35,13 @@ foreach ($rows as $row) {
 }
 
 
-$sqlUsers = "SELECT * FROM tasks";
+$resultSQL = "SELECT * FROM tasks";
 // Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
 if (!empty($_GET['project_id'])) {
     $projectId = $_GET['project_id'];
-    $resultSQL =  $sqlUsers . " WHERE project_id = " . $projectId;
+    $resultSQL =  $resultSQL . " WHERE project_id = " . $projectId;
 }
-$result2 = mysqli_query($conn, $sqlUsers);
+$result2 = mysqli_query($conn, $resultSQL);
 $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
 foreach ($rows2 as $row) {
