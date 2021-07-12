@@ -18,7 +18,6 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 //Взял из базы данных название проекты
-$userId = intval($_GET['project_id']);
 $sqlProject = 'SELECT * FROM projects ';
 
 $result = mysqli_query($conn, $sqlProject);
@@ -34,12 +33,23 @@ foreach ($rows as $row) {
     ];
 }
 
-
+$projectId = null;
 $resultSQL = "SELECT * FROM tasks";
 // Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
 if (!empty($_GET['project_id'])) {
     $projectId = $_GET['project_id'];
-    $resultSQL =  $resultSQL . " WHERE project_id = " . $projectId;
+    $resultSQL = $resultSQL . " WHERE project_id = " . $projectId;
+
+    foreach ($categories as $key => $value) {
+        if ($projectId === $value["project_id"]) {
+
+            $foundMatches = true;
+        }
+    }
+    if (!$foundMatches) {
+        exit(header('Location: /error404/'));
+    }
+
 }
 $result2 = mysqli_query($conn, $resultSQL);
 $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
@@ -66,6 +76,6 @@ function countTasksForCategory($tasks, $category)
     return $count;
 }
 
-$mainContent = include_template('main.php', ['categories' => $categories, 'tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
+$mainContent = include_template('main.php', ['categories' => $categories, 'tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks, 'projectId' => $projectId]);
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы

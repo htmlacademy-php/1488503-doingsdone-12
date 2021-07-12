@@ -4,13 +4,13 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($categories as $item): ?>
-                <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link <?php if ($item['project_id'] == $projectId): ?> main-navigation__list-item--active <?php endif ?>" href="/?project_id=<?= $item['project_id'] ?>">
+                <li class="main-navigation__list-item  <?php if ($item['project_id'] == $projectId): ?> main-navigation__list-item--active <?php endif ?>">
+                    <a class="main-navigation__list-item-link" href="/?project_id=<?= $item['project_id'] ?>">
                         <?= htmlspecialchars($item['name']); ?>
-                        <span class="main-navigation__list-item-count">
-                            <?= countTasksForCategory($tasks, $item['project_id']); ?>
-                        </span>
                     </a>
+                    <span class="main-navigation__list-item-count">
+                        <?= countTasksForCategory($tasks, $item['project_id']); ?>
+                    </span>
                 </li>
             <?php endforeach; ?>
         </ul>
