@@ -47,7 +47,7 @@ if (!empty($_GET['project_id'])) {
         }
     }
     if (!$foundMatches) {
-        exit(header('Location: /error404/'));
+        header('HTTP/1.1 404 Not Found');
     }
 
 }
