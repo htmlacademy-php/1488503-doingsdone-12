@@ -34,15 +34,15 @@ foreach ($rows as $row) {
 }
 
 $projectId = null;
+$foundMatches = false;
 $resultSQL = "SELECT * FROM tasks";
 // Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
 if (!empty($_GET['project_id'])) {
-    $projectId = $_GET['project_id'];
+    $projectId = intval($_GET['project_id']);
     $resultSQL = $resultSQL . " WHERE project_id = " . $projectId;
 
     foreach ($categories as $key => $value) {
         if ($projectId === $value["project_id"]) {
-
             $foundMatches = true;
         }
     }
@@ -76,6 +76,11 @@ function countTasksForCategory($tasks, $category)
     return $count;
 }
 
-$mainContent = include_template('main.php', ['categories' => $categories, 'tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks, 'projectId' => $projectId]);
+$mainContent = include_template('main.php', [
+    'categories' => $categories,
+    'tasks' => $tasks,
+    'show_complete_tasks' => $show_complete_tasks,
+    'projectId' => $projectId
+]);
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы
