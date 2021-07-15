@@ -4,65 +4,54 @@ include 'conndb.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
-//$categories = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто",];
-//$tasks = [
-//    [
-//        'task' => 'Собеседование в IT компании',
-//        'date_of_completion' => '10.05.2021',
-//        'category' => 'Работа',
-//        'completed' => false,
-//    ],
-//    [
-//        'task' => 'Выполнить тестовое задание',
-//        'date_of_completion' => '09.05.2021',
-//        'category' => 'Работа',
-//        'completed' => false,
-//    ],
-//    [
-//        'task' => 'Сделать задание первого раздела',
-//        'date_of_completion' => '07.05.2021',
-//        'category' => 'Учеба',
-//        'completed' => false,
-//    ],
-//    [
-//        'task' => 'Встреча с другом',
-//        'date_of_completion' => '06.05.2021',
-//        'category' => 'Входящие',
-//        'completed' => false,
-//    ],
-//    [
-//        'task' => 'Купить корм для кота',
-//        'date_of_completion' => '05.05.2021',
-//        'category' => 'Домашние дела',
-//        'completed' => false,
-//    ],
-//    [
-//        'task' => 'Заказать пиццу',
-//        'date_of_completion' => '08.05.2021',
-//        'category' => 'Домашние дела',
-//        'completed' => false,
-//    ]
-//];
 $categories = [];
 $tasks = [];
+
 
 //Подключение базы данных
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+//Кодировка utf-8
 $conn->set_charset("utf8");
 
-$sqlProject = "SELECT * FROM projects";
+//Взял из базы данных название проекты
+$sqlProject = 'SELECT * FROM projects ';
+
 $result = mysqli_query($conn, $sqlProject);
 $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+
+//показывает каждый row
+//name == это название проект
 foreach ($rows as $row) {
-    $categories[] = $row['name'];
+    $categories[] = [
+        'name' => $row['name'],
+        'project_id' => $row['id'],
+    ];
 }
 
-$sqlUsers = "SELECT * FROM tasks";
-$result2 = mysqli_query($conn, $sqlUsers);
+$projectId = null;
+$foundMatches = false;
+$resultSQL = "SELECT * FROM tasks";
+// Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
+if (!empty($_GET['project_id'])) {
+    $projectId = intval($_GET['project_id']);
+    $resultSQL = $resultSQL . " WHERE project_id = " . $projectId;
+
+    foreach ($categories as $key => $value) {
+        if ($projectId === $value["project_id"]) {
+            $foundMatches = true;
+        }
+    }
+    if (!$foundMatches) {
+        header('HTTP/1.1 404 Not Found');
+    }
+
+}
+$result2 = mysqli_query($conn, $resultSQL);
 $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
 foreach ($rows2 as $row) {
@@ -71,7 +60,7 @@ foreach ($rows2 as $row) {
             'task' => $row['name'],
             'date_of_completion' => $row['date_term'],
             'category' => $row['project_id'],
-            'completed' => $row['status'] == 1,
+            'completed' => $row['status'] == true,
         ];
     }
 }
@@ -87,6 +76,11 @@ function countTasksForCategory($tasks, $category)
     return $count;
 }
 
-$mainContent = include_template('main.php', ['categories' => $categories, 'tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
+$mainContent = include_template('main.php', [
+    'categories' => $categories,
+    'tasks' => $tasks,
+    'show_complete_tasks' => $show_complete_tasks,
+    'projectId' => $projectId
+]);
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы
