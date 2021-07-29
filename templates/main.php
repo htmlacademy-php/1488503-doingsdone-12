@@ -9,7 +9,7 @@
                         <?= htmlspecialchars($item['name']); ?>
                     </a>
                     <span class="main-navigation__list-item-count">
-                        <?=htmlspecialchars($item['count'])?>
+                        <?= htmlspecialchars($item['count']) ?>
                     </span>
                 </li>
             <?php endforeach; ?>

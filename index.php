@@ -54,12 +54,12 @@ if (!empty($_GET['project_id'])) {
     $resultSQL = $resultSQL . ' WHERE project_id = ' . $projectId;
 
     foreach ($categories as $key => $value) {
-        if ($projectId === $value["project_id"]) {
+        if ($projectId === intval($value["project_id"])) {
             $foundMatches = true;
         }
     }
     if (!$foundMatches) {
-        header('HTTP/1.1 404 Not Found');
+        header('Location:404.php');
     }
 
 }
