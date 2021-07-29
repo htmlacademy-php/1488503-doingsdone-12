@@ -9,7 +9,7 @@
                         <?= htmlspecialchars($item['name']); ?>
                     </a>
                     <span class="main-navigation__list-item-count">
-                        <?= countTasksForCategory($tasks, $item['project_id']); ?>
+                        <?=htmlspecialchars($item['count'])?>
                     </span>
                 </li>
             <?php endforeach; ?>

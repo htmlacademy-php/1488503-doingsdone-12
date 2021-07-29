@@ -14,6 +14,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
 //Кодировка utf-8
 $conn->set_charset("utf8");
 
@@ -23,23 +24,34 @@ $sqlProject = 'SELECT * FROM projects ';
 $result = mysqli_query($conn, $sqlProject);
 $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+function countTasksForCategory($conn, $categoryId)
+{
+    $sql = 'SELECT count(*) as count FROM tasks WHERE project_id =' . $categoryId;
+    $result = mysqli_query($conn, $sql)->fetch_assoc();
+    return $result['count'];
+
+}
 
 //показывает каждый row
 //name == это название проект
 foreach ($rows as $row) {
+    $count = countTasksForCategory($conn, $row['id']);
     $categories[] = [
         'name' => $row['name'],
         'project_id' => $row['id'],
+        'count' => $count,
     ];
 }
+
 
 $projectId = null;
 $foundMatches = false;
 $resultSQL = "SELECT * FROM tasks";
+
 // Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
 if (!empty($_GET['project_id'])) {
     $projectId = intval($_GET['project_id']);
-    $resultSQL = $resultSQL . " WHERE project_id = " . $projectId;
+    $resultSQL = $resultSQL . ' WHERE project_id = ' . $projectId;
 
     foreach ($categories as $key => $value) {
         if ($projectId === $value["project_id"]) {
@@ -65,16 +77,6 @@ foreach ($rows2 as $row) {
     }
 }
 
-function countTasksForCategory($tasks, $category)
-{
-    $count = 0;
-    foreach ($tasks as $task) {
-        if ($task['category'] === $category) {
-            $count++;
-        }
-    }
-    return $count;
-}
 
 $mainContent = include_template('main.php', [
     'categories' => $categories,
@@ -84,3 +86,5 @@ $mainContent = include_template('main.php', [
 ]);
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы
+
+
