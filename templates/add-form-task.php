@@ -21,7 +21,7 @@
     <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form" action="/add.php" method="post" autocomplete="off">
+        <form class="form" action="/add.php" method="post" autocomplete="off" enctype="multipart/form-data">
             <div class="form__row">
                 <?php $classname = isset($errors['name']) ? "form__input--error" : ""; ?>
                 <label class="form__label" for="name">Название <sup>*</sup></label>
@@ -34,7 +34,7 @@
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
                 <select class="form__input <?= $classname ?>" name="project" id="project">
                     <?php foreach ($categories as $category): ?>
-                        <option value=""><?= $category['name'] ?></option>
+                        <option value="<?=$category['project_id']?>"><?= $category['name'] ?></option>
                     <?php endforeach; ?>
                 </select>
                 <p class="form__message"><?= $errors['project'] ?? ""; ?></p>

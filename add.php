@@ -78,23 +78,19 @@ foreach ($rows2 as $row) {
     }
 }
 
+$errors = [];
 
-$errors = [
-
-
-];
-
-
-$formArrays = [
-    'name',
-    'project',
-    'date',
-    'file',
-];
-
-foreach ($formArrays as $formArray) {
-    if (empty($_POST)) {
-
+if (!empty($_POST)) {
+    $formArrays = [
+        'name',
+        'project',
+        'date',
+        'file',
+    ];
+    foreach ($formArrays as $formArray) {
+        if (empty($_POST[$formArray])) {
+            $errors[$formArray] = 'Поле не заполнено';
+        }
     }
 }
 
