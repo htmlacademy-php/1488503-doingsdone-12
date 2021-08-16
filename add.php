@@ -1,7 +1,7 @@
 <?php
 include 'helpers.php';
 include 'conndb.php';
-include 'templates/add-form-task.php';
+
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
@@ -78,9 +78,30 @@ foreach ($rows2 as $row) {
     }
 }
 
+
+$errors = [
+
+
+];
+
+
+$formArrays = [
+    'name',
+    'project',
+    'date',
+    'file',
+];
+
+foreach ($formArrays as $formArray) {
+    if (empty($_POST)) {
+
+    }
+}
+
 $mainContent = include_template('add-form-task.php', [
     'categories' => $categories,
-    'projectId' => $projectId
+    'projectId' => $projectId,
+    'errors' => $errors,
 ]);
 
 
