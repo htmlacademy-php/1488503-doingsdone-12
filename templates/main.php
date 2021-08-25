@@ -55,7 +55,7 @@
                     </label>
                 </td>
                 <td class="task__file">
-                    <a class="download-link" href="#">Home.psd</a>
+                    <a class="download-link" href="<?=$downloadFile?>"><?= htmlspecialchars($item['file']); ?></a>
                 </td>
                 <td class="task__date"><?= htmlspecialchars($item['date_of_completion']); ?>
                 </td>

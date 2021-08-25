@@ -73,6 +73,7 @@ foreach ($rows2 as $row) {
             'date_of_completion' => $row['date_term'],
             'category' => $row['project_id'],
             'completed' => $row['status'] == true,
+            'file' => $row['file'],
         ];
     }
 }

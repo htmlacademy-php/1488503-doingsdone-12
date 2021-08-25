@@ -15,7 +15,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 //Кодировка utf-8
 $conn->set_charset("utf8");
 
@@ -74,9 +73,11 @@ foreach ($rows2 as $row) {
             'date_of_completion' => $row['date_term'],
             'category' => $row['project_id'],
             'completed' => $row['status'] == true,
+            'file' => $row['file'],
         ];
     }
 }
+
 
 $errors = [];
 
@@ -85,14 +86,37 @@ if (!empty($_POST)) {
         'name',
         'project',
         'date',
-        'file',
     ];
     foreach ($formArrays as $formArray) {
         if (empty($_POST[$formArray])) {
             $errors[$formArray] = 'Поле не заполнено';
         }
+
+    }
+    if (isset($_FILES['file'])) {
+        //$_FILES['file']['name']
+        // [file] = название name = 'file' из форма add-form-task.php
+        // name Оригинальное имя файла на компьютере клиента;
+        $file_name = $_FILES['file']['name'];
+        $file_path = __DIR__ . '/uploads/';
+        $file_url = 'https://1488503-doingsdone-12/uploads/' . $file_name;
+        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
+    }
+
+
+}
+if (empty($errors)) {
+    $name = $_POST['name'];
+    $project = $_POST['project'];
+    $date = $_POST['date'].' 00:00:00';
+    $file = $_POST['file'];
+    $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`) 
+    VALUES ('4','$project','$name','$file','$date')";
+    if (mysqli_query($conn, $addTasks)) {
+       header('Location:index.php');
     }
 }
+
 
 $mainContent = include_template('add-form-task.php', [
     'categories' => $categories,
