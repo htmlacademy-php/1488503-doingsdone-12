@@ -96,7 +96,7 @@ if (!empty($_POST)) {
         }
 
     }
-    if (!empty($_FILES['file'])) {
+    if (!empty($_FILES['file']['name'])) {
         //$_FILES['file']['name']
         // [file] = название name = 'file' из форма add-form-task.php
         // name Оригинальное имя файла на компьютере клиента;
@@ -110,7 +110,7 @@ if (!empty($_POST)) {
         $name = $_POST['name'];
         $project = $_POST['project'];
         $date = $_POST['date'] . ' 00:00:00';
-        $current_date = $date;
+        $current_date = date("Y.m.d H:i:s");
         $file = $_POST['file'];
         $file = $file_url ?? null;
         $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
