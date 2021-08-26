@@ -68,12 +68,20 @@ $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
 foreach ($rows2 as $row) {
     if (!empty($row['name']) && !empty($row['project_id'])) {
+
+
+        if (!empty($row['file'])) {
+            $arFile = explode('/', $row['file']);
+            $fileName = $arFile[count($arFile)-1];
+        }
+
+
         $tasks[] = [
             'task' => $row['name'],
             'date_of_completion' => $row['date_term'],
             'category' => $row['project_id'],
             'completed' => $row['status'] == true,
-            'file' => $row['file'],
+            'fileName' => $fileName ?? '',
         ];
     }
 }
@@ -104,20 +112,20 @@ if (!empty($_POST)) {
     }
 
 
-}
-if (empty($errors)) {
-    $name = $_POST['name'];
-    $project = $_POST['project'];
-    $date = $_POST['date'].' 00:00:00';
-    $file = $_POST['file'];
-    $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`) 
-    VALUES ('4','$project','$name','$file','$date')";
-    if (mysqli_query($conn, $addTasks)) {
-       header('Location:index.php');
+    if (empty($errors)) {
+        $name = $_POST['name'];
+        $project = $_POST['project'];
+        $date = $_POST['date'] . ' 00:00:00';
+        $file = $_POST['file'];
+        $file = $file_url ?? null;
+        $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`) 
+        VALUES ('4','$project','$name','$file','$date')";
+        if (mysqli_query($conn, $addTasks)) {
+            header('Location:index.php');
+        }
     }
+
 }
-
-
 $mainContent = include_template('add-form-task.php', [
     'categories' => $categories,
     'projectId' => $projectId,
