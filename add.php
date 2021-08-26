@@ -17,10 +17,8 @@ if ($conn->connect_error) {
 
 //Кодировка utf-8
 $conn->set_charset("utf8");
-
 //Взял из базы данных название проекты
 $sqlProject = 'SELECT * FROM projects ';
-
 $result = mysqli_query($conn, $sqlProject);
 $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -29,7 +27,6 @@ function countTasksForCategory($conn, $categoryId)
     $sql = 'SELECT count(*) as count FROM tasks WHERE project_id =' . $categoryId;
     $result = mysqli_query($conn, $sql)->fetch_assoc();
     return $result['count'];
-
 }
 
 //показывает каждый row
@@ -42,7 +39,6 @@ foreach ($rows as $row) {
         'count' => $count,
     ];
 }
-
 
 $projectId = null;
 $foundMatches = false;
@@ -70,11 +66,11 @@ foreach ($rows2 as $row) {
     if (!empty($row['name']) && !empty($row['project_id'])) {
 
 
+
         if (!empty($row['file'])) {
             $arFile = explode('/', $row['file']);
-            $fileName = $arFile[count($arFile)-1];
+            $fileName = $arFile[count($arFile) - 1];
         }
-
 
         $tasks[] = [
             'task' => $row['name'],
@@ -85,7 +81,6 @@ foreach ($rows2 as $row) {
         ];
     }
 }
-
 
 $errors = [];
 
@@ -101,7 +96,7 @@ if (!empty($_POST)) {
         }
 
     }
-    if (isset($_FILES['file'])) {
+    if (!empty($_FILES['file'])) {
         //$_FILES['file']['name']
         // [file] = название name = 'file' из форма add-form-task.php
         // name Оригинальное имя файла на компьютере клиента;
@@ -111,15 +106,15 @@ if (!empty($_POST)) {
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
     }
 
-
     if (empty($errors)) {
         $name = $_POST['name'];
         $project = $_POST['project'];
         $date = $_POST['date'] . ' 00:00:00';
+        $current_date = $date;
         $file = $_POST['file'];
         $file = $file_url ?? null;
-        $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`) 
-        VALUES ('4','$project','$name','$file','$date')";
+        $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
+        VALUES ('4','$project','$name','$file','$current_date','$date')";
         if (mysqli_query($conn, $addTasks)) {
             header('Location:index.php');
         }
@@ -135,5 +130,3 @@ $mainContent = include_template('add-form-task.php', [
 
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 //HTML-код главной страницы
-
-

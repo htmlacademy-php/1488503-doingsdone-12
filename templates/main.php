@@ -57,7 +57,7 @@
                 <td class="task__file">
                     <?php if (!empty($item['file'])) : ?>
                         <a class="download-link" href="<?= $item['file'] ?>">
-                            <?=$item['fileName']; ?>
+                            <?= $item['fileName']; ?>
                         </a>
                     <?php endif; ?>
                 </td>
