@@ -68,11 +68,19 @@ $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
 foreach ($rows2 as $row) {
     if (!empty($row['name']) && !empty($row['project_id'])) {
+
+        if (!empty($row['file'])) {
+            $arFile = explode('/', $row['file']);
+            $fileName = $arFile[count($arFile) - 1];
+        }
+
         $tasks[] = [
             'task' => $row['name'],
             'date_of_completion' => $row['date_term'],
             'category' => $row['project_id'],
             'completed' => $row['status'] == true,
+            'file' => $row['file'],
+            'fileName' => $fileName ?? '',
         ];
     }
 }
