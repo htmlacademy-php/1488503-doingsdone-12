@@ -7,6 +7,7 @@ include 'conndb.php';
 $show_complete_tasks = rand(0, 1);
 $categories = [];
 $tasks = [];
+$projectIds = [];
 
 
 //Подключение базы данных
@@ -38,50 +39,11 @@ foreach ($rows as $row) {
         'project_id' => $row['id'],
         'count' => $count,
     ];
+    $projectIds[] = $row['id'];
 }
 
 $projectId = null;
 $foundMatches = false;
-$resultSQL = "SELECT * FROM tasks";
-
-// Если параметр присутствует, то показывать только те задачи, что относятся к этому проекту.
-if (!empty($_GET['project_id'])) {
-    $projectId = intval($_GET['project_id']);
-    $resultSQL = $resultSQL . ' WHERE project_id = ' . $projectId;
-
-    foreach ($categories as $key => $value) {
-        if ($projectId === intval($value["project_id"])) {
-            $foundMatches = true;
-        }
-    }
-    if (!$foundMatches) {
-        header('Location:404.php');
-    }
-
-}
-$result2 = mysqli_query($conn, $resultSQL);
-$rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
-
-foreach ($rows2 as $row) {
-    if (!empty($row['name']) && !empty($row['project_id'])) {
-
-
-
-        if (!empty($row['file'])) {
-            $arFile = explode('/', $row['file']);
-            $fileName = $arFile[count($arFile) - 1];
-        }
-
-        $tasks[] = [
-            'task' => $row['name'],
-            'date_of_completion' => $row['date_term'],
-            'category' => $row['project_id'],
-            'completed' => $row['status'] == true,
-            'fileName' => $fileName ?? '',
-        ];
-    }
-}
-
 $errors = [];
 
 if (!empty($_POST)) {
@@ -91,11 +53,29 @@ if (!empty($_POST)) {
         'date',
     ];
     foreach ($formArrays as $formArray) {
+
+        if ($formArray === 'date') {
+            $dateTodayFormatted = time();
+            $postDate = strtotime($_POST[$formArray]);
+            if ($postDate <= $dateTodayFormatted) {
+                $errors[$formArray] = 'не то выбрал даты';
+            }
+        }
+
+        if ($formArray === 'project') {
+
+            if (!in_array($_POST[$formArray], $projectIds)) {
+                $errors[$formArray] = 'Такого проекта нет';
+            }
+
+        }
+
         if (empty($_POST[$formArray])) {
             $errors[$formArray] = 'Поле не заполнено';
         }
 
     }
+
     if (!empty($_FILES['file']['name'])) {
         //$_FILES['file']['name']
         // [file] = название name = 'file' из форма add-form-task.php
@@ -111,7 +91,6 @@ if (!empty($_POST)) {
         $project = $_POST['project'];
         $date = $_POST['date'] . ' 00:00:00';
         $current_date = date("Y.m.d H:i:s");
-        $file = $_POST['file'];
         $file = $file_url ?? null;
         $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
         VALUES ('4','$project','$name','$file','$current_date','$date')";
