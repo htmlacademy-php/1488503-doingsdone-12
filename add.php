@@ -58,7 +58,7 @@ if (!empty($_POST)) {
             $dateTodayFormatted = time();
             $postDate = strtotime($_POST[$formArray]);
             if ($postDate <= $dateTodayFormatted) {
-                $errors[$formArray] = 'не то выбрал даты';
+            $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
             }
         }
 
