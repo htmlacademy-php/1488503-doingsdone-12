@@ -58,7 +58,7 @@ if (!empty($_POST)) {
             $dateTodayFormatted = time();
             $postDate = strtotime($_POST[$formArray]);
             if ($postDate <= $dateTodayFormatted) {
-            $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
+                $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
             }
         }
 
@@ -108,4 +108,3 @@ $mainContent = include_template('add-form-task.php', [
 
 
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
-//HTML-код главной страницы
