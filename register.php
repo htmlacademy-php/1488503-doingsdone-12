@@ -7,8 +7,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 $conn->set_charset("utf8");
-$passwordHash = "INSERT INTO `users` ( `password`) 
-            VALUES ('$password',)";
 
 $errors = [];
 
@@ -17,7 +15,6 @@ if (!empty($_POST)) {
         'email',
         'password',
         'name',
-
     ];
 
     foreach ($formArrays as $formArray) {
@@ -30,39 +27,34 @@ if (!empty($_POST)) {
 
             $RES = mysqli_query($conn, $duplicateEmail);
 
-            while ($row = mysqli_fetch_row($RES)) {
-                if ($row[0] > 0) {
-                    $errors[$formArray] = 'Вы уже зарегистрировали!';
-                }
-            }
-
             if (!$RES) {
                 $error = mysqli_error($conn);
                 print("Ошибка MySQL: " . $error);
+            } else {
+                if ($row = mysqli_fetch_row($RES)) {
+                    if ($row[0] > 0) {
+                        $errors[$formArray] = 'Вы уже зарегистрировали!';
+                    }
+                }
             }
 
-
-        }
-
-        if ($formArray === 'password') {
-            if (password_hash($_POST[$formArray], PASSWORD_DEFAULT) === false) {
-                $errors[$formArray] = 'Вы не ввели пароль';
-            }
         }
         if (empty($_POST[$formArray])) {
             $errors[$formArray] = 'Поле не заполнено';
         }
+    }
 
-        if (empty($errors)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`) 
-            VALUES ('$email', '$passwordHash','$name')";
-            if (mysqli_query($conn, $addRegister)) {
-                header('Location:index.php');
-            }
+    if (empty($errors)) {
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $date = new DateTime();
+        $createDate = date_format($date, 'Y-m-d H:i:s');
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`) 
+            VALUES ('$email', '$passwordHash','$name', '$createDate')";
+        if (mysqli_query($conn, $addRegister)) {
+            header('Location:index.php');
         }
     }
 
