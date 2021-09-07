@@ -6,7 +6,7 @@ include 'conndb.php';
 $show_complete_tasks = rand(0, 1);
 $categories = [];
 $tasks = [];
-
+$bodyBackground = true;
 
 //Подключение базы данных
 $conn = new mysqli($servername, $username, $password, $database);
