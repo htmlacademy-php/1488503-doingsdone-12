@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+<?php if (!isset($_SESSION['user'])):?>
 <header class="main-header">
     <a href="#">
         <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
@@ -20,4 +24,4 @@
         <a class="welcome__button button" href="../templates/register.php">Зарегистрироваться</a>
     </section>
 </div>
-
+<?php endif;?>

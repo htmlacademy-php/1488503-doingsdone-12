@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_SESSION['user'])) {
+
+}
 include 'helpers.php';
 include 'conndb.php';
 $conn = new mysqli($servername, $username, $password, $database);
@@ -19,12 +22,19 @@ if ($_POST) {
 
     if (!empty($_REQUEST['email'] and !empty($_REQUEST['password']))) {
         $email = $_REQUEST['email'];
-        $password = password_hash($_REQUEST['password'], PASSWORD_DEFAULT);
-        $checkUser = mysqli_query($conn,"SELECT * FROM `users` WHERE email= '$email' AND password='$password'");
-        if (mysqli_num_rows($checkUser)>0){
+        $password = $_REQUEST['password'];
+//        $password = password_hash($_REQUEST['password'], PASSWORD_DEFAULT);
+        $checkUser = mysqli_query($conn, "SELECT * FROM `users` WHERE email= '$email'"); //*AND password='$password'");
+        if (mysqli_num_rows($checkUser) > 0) {
             $user = mysqli_fetch_assoc($checkUser);
-            $_SESSION['email'] = $user;
-            header("Location:/index.php");
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['email'] = $user;
+                header("Location:/index.php");
+            } else {
+                $errors['password'] = "Неправильный пароль";
+            }
+        } else {
+            $errors['email'] = "Не правильный email";
         }
     }
 }
