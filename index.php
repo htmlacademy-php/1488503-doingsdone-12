@@ -18,33 +18,32 @@ function countTasksForCategory($conn, $categoryId)
 }
 
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
-    if (isset($_SESSION['user'])) {
-        $user_id = $_SESSION['user']['id'];
-        $show_complete_tasks = rand(0, 1);
-        $categories = [];
-        $tasks = [];
-        $bodyBackground = true;
+    $user_id = $_SESSION['user']['id'];
+    $show_complete_tasks = rand(0, 1);
+    $categories = [];
+    $tasks = [];
+    $bodyBackground = true;
 
-        $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
-        $result = mysqli_query($conn, $sqlProject);
-        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
+    $result = mysqli_query($conn, $sqlProject);
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        foreach ($rows as $row) {
-            $count = countTasksForCategory($conn, $row['id']);
-            $categories[] = [
-                'name' => $row['name'],
-                'project_id' => $row['id'],
-                'count' => $count,
-            ];
-        }
-        $projectId = null;
-        $foundMatches = false;
-        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
+    foreach ($rows as $row) {
+        $count = countTasksForCategory($conn, $row['id']);
+        $categories[] = [
+            'name' => $row['name'],
+            'project_id' => $row['id'],
+            'count' => $count,
+        ];
     }
+    $projectId = null;
+    $foundMatches = false;
+    $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
+
 
     if (!empty($_GET['project_id'])) {
         $projectId = intval($_GET['project_id']);
-        $resultSQL = $resultSQL . ' WHERE project_id = ' . $projectId;
+        $resultSQL = $resultSQL . ' project_id = ' . $projectId;
 
         foreach ($categories as $key => $value) {
             if ($projectId === intval($value["project_id"])) {
@@ -83,7 +82,8 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         'show_complete_tasks' => $show_complete_tasks,
         'projectId' => $projectId
     ]);
-    echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
-} else {
 
+} else {
+    $mainContent = include_template('guest.php',[]);
 }
+echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);

@@ -28,7 +28,7 @@ if ($_POST) {
         if (mysqli_num_rows($checkUser) > 0) {
             $user = mysqli_fetch_assoc($checkUser);
             if (password_verify($password, $user['password'])) {
-                $_SESSION['email'] = $user;
+                $_SESSION['user'] = $user;
                 header("Location:/index.php");
             } else {
                 $errors['password'] = "Неправильный пароль";
