@@ -1,4 +1,4 @@
 <?php
 session_start();
-
-$_SESSION = [];
+$_SESSION = array();
+session_destroy();
