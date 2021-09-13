@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_SESSION['user'])) {
+
+}
 include 'helpers.php';
 include 'conndb.php';
 
@@ -88,13 +91,14 @@ if (!empty($_POST)) {
     }
 
     if (empty($errors)) {
+        $user = $_SESSION['user']['id'];
         $name = $_POST['name'];
         $project = $_POST['project'];
         $date = $_POST['date'] . ' 00:00:00';
         $current_date = date("Y.m.d H:i:s");
         $file = $file_url ?? null;
         $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
-        VALUES ('4','$project','$name','$file','$current_date','$date')";
+        VALUES ('$user','$project','$name','$file','$current_date','$date')";
         if (mysqli_query($conn, $addTasks)) {
             header('Location:index.php');
         }
