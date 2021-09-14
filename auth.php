@@ -1,8 +1,5 @@
 <?php
 session_start();
-if (isset($_SESSION['user'])) {
-
-}
 include 'helpers.php';
 include 'conndb.php';
 $conn = new mysqli($servername, $username, $password, $database);

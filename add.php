@@ -101,6 +101,8 @@ if (isset($_SESSION['user'])) {
         'projectId' => $projectId,
         'errors' => $errors,
     ]);
+}else{
+    $mainContent = include_template('guest.php',[]);
 }
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 
