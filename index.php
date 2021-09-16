@@ -2,7 +2,7 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
-
+$errors = [];
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -23,6 +23,17 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $bodyBackground = true;
+    $search = $_GET['search'];
+
+    if (!empty($search)) {
+        $trim = trim($_GET['search']);
+        $searchSql = mysqli_query($conn, "SELECT * FROM `tasks` WHERE MATCH(name, user_id ) AGAINST('$trim')");
+        if (mysqli_num_rows($searchSql) > 0) {
+            $searchMessage = mysqli_fetch_assoc($searchSql);
+        } else {
+            $errors['search'] = "Ничего не найдено по вашему запросу";
+        }
+    }
 
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
@@ -36,11 +47,10 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             'count' => $count,
         ];
     }
+
     $projectId = null;
     $foundMatches = false;
     $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
-
-
     if (!empty($_GET['project_id'])) {
         $projectId = intval($_GET['project_id']);
         $resultSQL = $resultSQL . ' project_id = ' . $projectId;
@@ -53,7 +63,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         if (!$foundMatches) {
             header('Location:404.php');
         }
-
     }
     $result2 = mysqli_query($conn, $resultSQL);
     $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
@@ -73,6 +82,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                 'completed' => $row['status'] == true,
                 'file' => $row['file'],
                 'fileName' => $fileName ?? '',
+                'name' => $row['name'],
             ];
         }
     }
@@ -80,10 +90,10 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         'categories' => $categories,
         'tasks' => $tasks,
         'show_complete_tasks' => $show_complete_tasks,
-        'projectId' => $projectId
+        'projectId' => $projectId,
+        'errors' => $errors,
     ]);
-
 } else {
-    $mainContent = include_template('guest.php',[]);
+    $mainContent = include_template('guest.php', []);
 }
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
