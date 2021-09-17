@@ -24,7 +24,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $bodyBackground = true;
-    $search = $_GET['search'];
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -38,12 +37,32 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         ];
     }
 
-    if (!empty($search)) {
+    if (!empty($_GET['search'])) {
         $trim = trim($_GET['search']);
         $searchSql = mysqli_query($conn,
             "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id'");
         if (mysqli_num_rows($searchSql) > 0) {
-            $searchMessage = mysqli_fetch_assoc($searchSql);
+            $arSearchRows = mysqli_fetch_all($searchSql, MYSQLI_ASSOC);
+            foreach ($arSearchRows as $row) {
+                if (!empty($row['name']) && !empty($row['project_id'])) {
+
+                    if (!empty($row['file'])) {
+                        $arFile = explode('/', $row['file']);
+                        $fileName = $arFile[count($arFile) - 1];
+                    }
+
+                    $tasks[] = [
+                        'task' => $row['name'],
+                        'date_of_completion' => $row['date_term'],
+                        'category' => $row['project_id'],
+                        'completed' => $row['status'] == true,
+                        'file' => $row['file'],
+                        'fileName' => $fileName ?? '',
+                        'name' => $row['name'],
+                    ];
+                }
+            }
+
         } else {
             $errors['search'] = "Ничего не найдено по вашему запросу";
         }
@@ -52,7 +71,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
         if (!empty($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
-            $resultSQL = $resultSQL . ' project_id = ' . $projectId;
+            $resultSQL = $resultSQL . 'and project_id = ' . $projectId;
 
             foreach ($categories as $key => $value) {
                 if ($projectId === intval($value["project_id"])) {

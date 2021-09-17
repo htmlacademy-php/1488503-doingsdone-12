@@ -21,8 +21,8 @@ if (isset($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $projectIds = [];
-
-    $sqlProject = 'SELECT * FROM projects ';
+    $user_id = $_SESSION['user']['id'];
+    $sqlProject = "SELECT * FROM projects WHERE user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -89,7 +89,7 @@ if (isset($_SESSION['user'])) {
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
             $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
-        VALUES ('$user','$project','$name','$file','$current_date','$date')";
+        VALUES ('$user','$project','$name','$file','','$current_date','$date')";
             if (mysqli_query($conn, $addTasks)) {
                 header('Location:index.php');
             }
@@ -101,8 +101,8 @@ if (isset($_SESSION['user'])) {
         'projectId' => $projectId,
         'errors' => $errors,
     ]);
-}else{
-    $mainContent = include_template('guest.php',[]);
+} else {
+    $mainContent = include_template('guest.php', []);
 }
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 
