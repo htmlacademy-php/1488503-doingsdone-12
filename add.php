@@ -21,8 +21,8 @@ if (isset($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $projectIds = [];
-
-    $sqlProject = 'SELECT * FROM projects ';
+    $user_id = $_SESSION['user']['id'];
+    $sqlProject = "SELECT * FROM projects WHERE user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -72,9 +72,6 @@ if (isset($_SESSION['user'])) {
         }
 
         if (!empty($_FILES['file']['name'])) {
-            //$_FILES['file']['name']
-            // [file] = название name = 'file' из форма add-form-task.php
-            // name Оригинальное имя файла на компьютере клиента;
             $file_name = $_FILES['file']['name'];
             $file_path = __DIR__ . '/uploads/';
             $file_url = 'https://1488503-doingsdone-12/uploads/' . $file_name;
@@ -101,8 +98,8 @@ if (isset($_SESSION['user'])) {
         'projectId' => $projectId,
         'errors' => $errors,
     ]);
-}else{
-    $mainContent = include_template('guest.php',[]);
+} else {
+    $mainContent = include_template('guest.php', []);
 }
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
 

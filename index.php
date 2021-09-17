@@ -2,7 +2,8 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
-
+$errors = [];
+$projectId = null;
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -23,7 +24,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $bodyBackground = true;
-
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -36,54 +36,83 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             'count' => $count,
         ];
     }
-    $projectId = null;
-    $foundMatches = false;
-    $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
 
+    if (!empty($_GET['search'])) {
+        $trim = trim($_GET['search']);
+        $searchSql = mysqli_query($conn,
+            "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id'");
+        if (mysqli_num_rows($searchSql) > 0) {
+            $arSearchRows = mysqli_fetch_all($searchSql, MYSQLI_ASSOC);
+            foreach ($arSearchRows as $row) {
+                if (!empty($row['name']) && !empty($row['project_id'])) {
 
-    if (!empty($_GET['project_id'])) {
-        $projectId = intval($_GET['project_id']);
-        $resultSQL = $resultSQL . ' project_id = ' . $projectId;
+                    if (!empty($row['file'])) {
+                        $arFile = explode('/', $row['file']);
+                        $fileName = $arFile[count($arFile) - 1];
+                    }
 
-        foreach ($categories as $key => $value) {
-            if ($projectId === intval($value["project_id"])) {
-                $foundMatches = true;
-            }
-        }
-        if (!$foundMatches) {
-            header('Location:404.php');
-        }
-
-    }
-    $result2 = mysqli_query($conn, $resultSQL);
-    $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
-
-    foreach ($rows2 as $row) {
-        if (!empty($row['name']) && !empty($row['project_id'])) {
-
-            if (!empty($row['file'])) {
-                $arFile = explode('/', $row['file']);
-                $fileName = $arFile[count($arFile) - 1];
+                    $tasks[] = [
+                        'task' => $row['name'],
+                        'date_of_completion' => $row['date_term'],
+                        'category' => $row['project_id'],
+                        'completed' => $row['status'] == true,
+                        'file' => $row['file'],
+                        'fileName' => $fileName ?? '',
+                        'name' => $row['name'],
+                    ];
+                }
             }
 
-            $tasks[] = [
-                'task' => $row['name'],
-                'date_of_completion' => $row['date_term'],
-                'category' => $row['project_id'],
-                'completed' => $row['status'] == true,
-                'file' => $row['file'],
-                'fileName' => $fileName ?? '',
-            ];
+        } else {
+            $errors['search'] = "Ничего не найдено по вашему запросу";
+        }
+    } else {
+        $foundMatches = false;
+        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
+        if (!empty($_GET['project_id'])) {
+            $projectId = intval($_GET['project_id']);
+            $resultSQL = $resultSQL . 'and project_id = ' . $projectId;
+
+            foreach ($categories as $key => $value) {
+                if ($projectId === intval($value["project_id"])) {
+                    $foundMatches = true;
+                }
+            }
+            if (!$foundMatches) {
+                header('Location:404.php');
+            }
+        }
+        $result2 = mysqli_query($conn, $resultSQL);
+        $rows2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
+
+        foreach ($rows2 as $row) {
+            if (!empty($row['name']) && !empty($row['project_id'])) {
+
+                if (!empty($row['file'])) {
+                    $arFile = explode('/', $row['file']);
+                    $fileName = $arFile[count($arFile) - 1];
+                }
+
+                $tasks[] = [
+                    'task' => $row['name'],
+                    'date_of_completion' => $row['date_term'],
+                    'category' => $row['project_id'],
+                    'completed' => $row['status'] == true,
+                    'file' => $row['file'],
+                    'fileName' => $fileName ?? '',
+                    'name' => $row['name'],
+                ];
+            }
         }
     }
     $mainContent = include_template('main.php', [
         'categories' => $categories,
         'tasks' => $tasks,
         'show_complete_tasks' => $show_complete_tasks,
-        'projectId' => $projectId
+        'projectId' => $projectId,
+        'errors' => $errors,
     ]);
-
 } else {
-    $mainContent = include_template('guest.php',[]);
+    $mainContent = include_template('guest.php', []);
 }
 echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
