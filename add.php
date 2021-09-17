@@ -72,9 +72,6 @@ if (isset($_SESSION['user'])) {
         }
 
         if (!empty($_FILES['file']['name'])) {
-            //$_FILES['file']['name']
-            // [file] = название name = 'file' из форма add-form-task.php
-            // name Оригинальное имя файла на компьютере клиента;
             $file_name = $_FILES['file']['name'];
             $file_path = __DIR__ . '/uploads/';
             $file_url = 'https://1488503-doingsdone-12/uploads/' . $file_name;
@@ -89,7 +86,7 @@ if (isset($_SESSION['user'])) {
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
             $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
-        VALUES ('$user','$project','$name','$file','','$current_date','$date')";
+        VALUES ('$user','$project','$name','$file','$current_date','$date')";
             if (mysqli_query($conn, $addTasks)) {
                 header('Location:index.php');
             }
