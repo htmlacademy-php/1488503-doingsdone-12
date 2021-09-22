@@ -20,10 +20,47 @@ function countTasksForCategory($conn, $categoryId)
 
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
-    $show_complete_tasks = rand(0, 1);
     $categories = [];
     $tasks = [];
+    $tomorrow = $_GET[''];
+    $agenda = $_GET[''];
+    $overdue = $_GET[''];
+
+    if (isset($_GET['filter'])) {
+        if ($_GET['filter'] == 'tomorrow') {
+            $date = new DateTime();
+            $date->modify('+1 day');
+            $dateTomorrow = $date->format('Y-m-d');
+            $date_start = $dateTomorrow . ' 00:00:00';
+            $date_end = $dateTomorrow . ' 23:59:00';
+            $where = "date_term > '$date_start' and date_term < '$date_end'";
+        }
+        if ($_GET['filter'] == 'today') {
+            $date = new DateTime();
+            $dateToday = $date->format('Y-m-d');
+            $date_start = $dateToday . ' 00:00:00';
+            $date_end = $dateToday . ' 23:59:00';
+            $where = "date_term > '$date_start' and date_term < '$date_end'";
+        }
+        if ($_GET['filter'] == 'yesterday') {
+            $date = new DateTime();
+            $date->modify('-1 day');
+            $dateYesterday = $date->format('Y-m-d');
+            $date_end = $dateYesterday . ' 23:59:00';
+            $where = "date_term < '$date_end' and status = 0";
+        }
+    };
+    $agendaSql = mysqli_query($conn, "SELECT * FROM `taksk` WHERE $where ");
+
     $bodyBackground = true;
+    $status = intval($_GET['check']);
+    $tasks_id = intval($_GET['task_id']);
+    $show_complete_tasks_Sql = mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
+    if (!$show_complete_tasks_Sql) {
+        die('Неверный запрос: ' . mysql_error());
+    }
+
+
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -36,7 +73,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             'count' => $count,
         ];
     }
-
     if (!empty($_GET['search'])) {
         $trim = trim($_GET['search']);
         $searchSql = mysqli_query($conn,
@@ -101,6 +137,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                     'file' => $row['file'],
                     'fileName' => $fileName ?? '',
                     'name' => $row['name'],
+                    'id' => $row['id'],
                 ];
             }
         }

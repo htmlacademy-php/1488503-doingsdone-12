@@ -14,7 +14,7 @@
             </ul>
         </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="form-project.html">Добавить
+        <a class="button button--transparent button--plus content__side-button" href="form-project.php">Добавить
             проект</a>
     </section>
 
