@@ -22,10 +22,8 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
     $categories = [];
     $tasks = [];
-    $tomorrow = $_GET[''];
-    $agenda = $_GET[''];
-    $overdue = $_GET[''];
-
+    $where = '';
+    $show_complete_tasks = [];
     if (isset($_GET['filter'])) {
         if ($_GET['filter'] == 'tomorrow') {
             $date = new DateTime();
@@ -33,32 +31,31 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             $dateTomorrow = $date->format('Y-m-d');
             $date_start = $dateTomorrow . ' 00:00:00';
             $date_end = $dateTomorrow . ' 23:59:00';
-            $where = "date_term > '$date_start' and date_term < '$date_end'";
+            $where = " AND date_term > '$date_start' AND date_term < '$date_end'";
         }
         if ($_GET['filter'] == 'today') {
             $date = new DateTime();
             $dateToday = $date->format('Y-m-d');
             $date_start = $dateToday . ' 00:00:00';
             $date_end = $dateToday . ' 23:59:00';
-            $where = "date_term > '$date_start' and date_term < '$date_end'";
+            $where = " AND date_term > '$date_start' AND date_term < '$date_end'";
         }
         if ($_GET['filter'] == 'yesterday') {
             $date = new DateTime();
             $date->modify('-1 day');
             $dateYesterday = $date->format('Y-m-d');
             $date_end = $dateYesterday . ' 23:59:00';
-            $where = "date_term < '$date_end' and status = 0";
+            $where = "AND date_term < '$date_end' AND status != 0";
         }
-    };
-    $agendaSql = mysqli_query($conn, "SELECT * FROM `taksk` WHERE $where ");
-
-    $bodyBackground = true;
-    $status = intval($_GET['check']);
-    $tasks_id = intval($_GET['task_id']);
-    $show_complete_tasks_Sql = mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
-    if (!$show_complete_tasks_Sql) {
-        die('Неверный запрос: ' . mysql_error());
     }
+    $bodyBackground = true;
+
+    if (isset($_GET['check']) and isset($_GET['task_id'])){
+        $status = intval($_GET['check']);
+        $tasks_id = intval($_GET['task_id']);
+        $show_complete_tasks_Sql = mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
+    }
+
 
 
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
@@ -76,7 +73,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     if (!empty($_GET['search'])) {
         $trim = trim($_GET['search']);
         $searchSql = mysqli_query($conn,
-            "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id'");
+            "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id' '$where' ");
         if (mysqli_num_rows($searchSql) > 0) {
             $arSearchRows = mysqli_fetch_all($searchSql, MYSQLI_ASSOC);
             foreach ($arSearchRows as $row) {
@@ -104,7 +101,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         }
     } else {
         $foundMatches = false;
-        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
+        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id' $where ";
         if (!empty($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
             $resultSQL = $resultSQL . 'and project_id = ' . $projectId;
