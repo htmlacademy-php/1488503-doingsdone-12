@@ -23,7 +23,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $where = '';
-    $show_complete_tasks = [];
+    $show_complete_tasks = rand(0, 1);
     if (isset($_GET['filter'])) {
         if ($_GET['filter'] == 'tomorrow') {
             $date = new DateTime();
