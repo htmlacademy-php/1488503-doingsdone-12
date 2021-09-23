@@ -23,7 +23,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $categories = [];
     $tasks = [];
     $where = '';
-    $show_complete_tasks = rand(0, 1);
+    $show_complete_tasks = 0;
     if (isset($_GET['filter'])) {
         if ($_GET['filter'] == 'tomorrow') {
             $date = new DateTime();
@@ -31,33 +31,34 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             $dateTomorrow = $date->format('Y-m-d');
             $date_start = $dateTomorrow . ' 00:00:00';
             $date_end = $dateTomorrow . ' 23:59:00';
-            $where = " AND date_term > '$date_start' AND date_term < '$date_end'";
+            $where = " AND date_term >= '$date_start' AND date_term <= '$date_end'";
         }
         if ($_GET['filter'] == 'today') {
             $date = new DateTime();
             $dateToday = $date->format('Y-m-d');
             $date_start = $dateToday . ' 00:00:00';
             $date_end = $dateToday . ' 23:59:00';
-            $where = " AND date_term > '$date_start' AND date_term < '$date_end'";
+            $where = " AND date_term >= '$date_start' AND date_term <= '$date_end'";
         }
         if ($_GET['filter'] == 'yesterday') {
             $date = new DateTime();
             $date->modify('-1 day');
             $dateYesterday = $date->format('Y-m-d');
             $date_end = $dateYesterday . ' 23:59:00';
-            $where = "AND date_term < '$date_end' AND status != 0";
+            $where = "AND date_term <= '$date_end' AND (status is null or status != 1)";
         }
+    }
+    if (isset($_GET['show_completed'])){
+        $show_complete_tasks = intval($_GET['show_completed']);
+            $where = "AND status = $show_complete_tasks ";
     }
     $bodyBackground = true;
 
-    if (isset($_GET['check']) and isset($_GET['task_id'])){
+    if (isset($_GET['check']) and isset($_GET['task_id'])) {
         $status = intval($_GET['check']);
         $tasks_id = intval($_GET['task_id']);
         $show_complete_tasks_Sql = mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
     }
-
-
-
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -95,7 +96,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                     ];
                 }
             }
-
         } else {
             $errors['search'] = "Ничего не найдено по вашему запросу";
         }
