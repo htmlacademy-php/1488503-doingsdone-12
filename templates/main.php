@@ -15,7 +15,7 @@
         </ul>
     </nav>
     <a class="button button--transparent button--plus content__side-button"
-       href="pages/form-project.html" target="project_add">Добавить проект</a>
+       href="form-project.php" target="project_add">Добавить проект</a>
 </section>
 <main class="content__main">
     <h2 class="content__main-heading">Список задач</h2>
@@ -26,10 +26,16 @@
     </form>
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
+            <a href="/index.php?filter=all"
+               class="tasks-switch__item <?= isset($_GET['filter']) && $_GET['filter'] == 'all' ? "tasks-switch__item--active" : "" ?> ">Все
+                задачи</a>
+            <a href="/index.php?filter=today"
+               class="tasks-switch__item <?= isset($_GET['filter']) && $_GET['filter'] == 'today' ? "tasks-switch__item--active" : "" ?> ">Повестка
+                дня</a>
+            <a href="/index.php?filter=tomorrow"
+               class="tasks-switch__item <?= isset($_GET['filter']) && $_GET['filter'] == 'tomorrow' ? "tasks-switch__item--active" : "" ?> ">Завтра</a>
+            <a href="/index.php?filter=yesterday"
+               class="tasks-switch__item <?= isset($_GET['filter']) && $_GET['filter'] == 'yesterday' ? "tasks-switch__item--active" : "" ?> ">Просроченные</a>
         </nav>
         <label class="checkbox">
             <input class="checkbox__input visually-hidden show_completed"
@@ -49,9 +55,10 @@
                 <?php if ($item['completed'] == 1): ?> task--completed <?php endif; ?>">
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
-                            <input class="checkbox__input visually-hidden task__checkbox"
+                            <input class="checkbox__input visually-hidden task__checkbox" value="<?= $item['id']; ?>"
                                    type="checkbox" <?php if ($item['completed'] == 1): ?> checked <?php endif; ?>>
                             <span class="checkbox__text"><?= htmlspecialchars($item['task']); ?></span>
+
                         </label>
                     </td>
                     <td class="task__file">

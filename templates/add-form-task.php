@@ -5,7 +5,7 @@
         <nav class="main-navigation">
             <ul class="main-navigation__list">
                 <?php foreach ($categories as $category) : ?>
-                    <li class="main-navigation__list-item  <?php if ($category['project_id'] == $projectId): ?> main-navigation__list-item--active <?php endif ?>">
+                    <li class="main-navigation__list-item">
                         <a class="main-navigation__list-item-link"
                            href="/?project_id=<?= $category['project_id'] ?>"><?= htmlspecialchars($category['name']); ?></a>
                         <span class="main-navigation__list-item-count"><?= htmlspecialchars($category['count']) ?></span>
@@ -14,7 +14,7 @@
             </ul>
         </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="form-project.html">Добавить
+        <a class="button button--transparent button--plus content__side-button" href="form-project.php">Добавить
             проект</a>
     </section>
 

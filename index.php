@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
 session_start();
 include 'helpers.php';
 include 'conndb.php';
@@ -20,10 +22,47 @@ function countTasksForCategory($conn, $categoryId)
 
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
-    $show_complete_tasks = rand(0, 1);
     $categories = [];
     $tasks = [];
+    $where = '';
+    $show_complete_tasks = 0;
+    if (isset($_GET['filter'])) {
+        if ($_GET['filter'] == 'tomorrow') {
+            $date = new DateTime();
+            $date->modify('+1 day');
+            $dateTomorrow = $date->format('Y-m-d');
+            $date_start = $dateTomorrow . ' 00:00:00';
+            $date_end = $dateTomorrow . ' 23:59:00';
+            $where = " AND date_term >= '$date_start' AND date_term <= '$date_end'";
+        }
+        if ($_GET['filter'] == 'today') {
+            $date = new DateTime();
+            $dateToday = $date->format('Y-m-d');
+            $date_start = $dateToday . ' 00:00:00';
+            $date_end = $dateToday . ' 23:59:00';
+            $where = " AND date_term >= '$date_start' AND date_term <= '$date_end'";
+        }
+        if ($_GET['filter'] == 'yesterday') {
+            $date = new DateTime();
+            $date->modify('-1 day');
+            $dateYesterday = $date->format('Y-m-d');
+            $date_end = $dateYesterday . ' 23:59:00';
+            $where = "AND date_term <= '$date_end' ";
+        }
+    }
+    if (isset($_GET['show_completed'])){
+        $show_complete_tasks = intval($_GET['show_completed']);
+    }
+    if ($show_complete_tasks == 0){
+        $where .= " AND (status is null or status !=1) ";
+    }
     $bodyBackground = true;
+
+    if (isset($_GET['check']) and isset($_GET['task_id'])) {
+        $status = intval($_GET['check']);
+        $tasks_id = intval($_GET['task_id']);
+        mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
+    }
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -36,11 +75,10 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             'count' => $count,
         ];
     }
-
     if (!empty($_GET['search'])) {
         $trim = trim($_GET['search']);
         $searchSql = mysqli_query($conn,
-            "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id'");
+            "SELECT * FROM `tasks` WHERE MATCH(name) AGAINST('$trim') and user_id = '$user_id' '$where' ");
         if (mysqli_num_rows($searchSql) > 0) {
             $arSearchRows = mysqli_fetch_all($searchSql, MYSQLI_ASSOC);
             foreach ($arSearchRows as $row) {
@@ -62,13 +100,12 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                     ];
                 }
             }
-
         } else {
             $errors['search'] = "Ничего не найдено по вашему запросу";
         }
     } else {
         $foundMatches = false;
-        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id'";
+        $resultSQL = "SELECT * FROM `tasks` WHERE  user_id = '$user_id' $where ";
         if (!empty($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
             $resultSQL = $resultSQL . 'and project_id = ' . $projectId;
@@ -101,6 +138,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                     'file' => $row['file'],
                     'fileName' => $fileName ?? '',
                     'name' => $row['name'],
+                    'id' => $row['id'],
                 ];
             }
         }
