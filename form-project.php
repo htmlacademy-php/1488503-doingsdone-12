@@ -39,7 +39,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             $name = $_POST['name'];
             $addProject = "INSERT INTO `projects`(`user_id`,`name`) VALUES ('$user_id','$name')";
             if(mysqli_query($conn, $addProject)){
-                header('Location:form-project.php');
+                header('Location:index.php');
             }
 
         }

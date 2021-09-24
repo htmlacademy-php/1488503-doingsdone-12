@@ -45,19 +45,21 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             $date->modify('-1 day');
             $dateYesterday = $date->format('Y-m-d');
             $date_end = $dateYesterday . ' 23:59:00';
-            $where = "AND date_term <= '$date_end' AND (status is null or status != 1)";
+            $where = "AND date_term <= '$date_end' ";
         }
     }
     if (isset($_GET['show_completed'])){
         $show_complete_tasks = intval($_GET['show_completed']);
-            $where = "AND status = $show_complete_tasks ";
+    }
+    if ($show_complete_tasks == 0){
+        $where .= " AND (status is null or status !=1) ";
     }
     $bodyBackground = true;
 
     if (isset($_GET['check']) and isset($_GET['task_id'])) {
         $status = intval($_GET['check']);
         $tasks_id = intval($_GET['task_id']);
-        $show_complete_tasks_Sql = mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
+        mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
     }
     $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
     $result = mysqli_query($conn, $sqlProject);
