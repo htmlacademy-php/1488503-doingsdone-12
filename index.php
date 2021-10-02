@@ -1,7 +1,7 @@
 <?php
+session_start();
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
-session_start();
 include 'helpers.php';
 include 'conndb.php';
 $errors = [];
@@ -19,7 +19,6 @@ function countTasksForCategory($conn, $categoryId)
     return $result['count'];
 
 }
-
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
     $categories = [];
