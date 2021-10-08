@@ -1,6 +1,7 @@
 <?php
 require('vendor/autoload.php');
 include 'conndb.php';
+require_once 'connSwiftMailer.php';
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -26,15 +27,35 @@ foreach ($resSql as $item) {
             'email' => $item['email'],
         ];
     }
+
+    $message = (new Swift_Message('Уведомление от сервиса «Дела в порядке»'))
+
+        ->setFrom(['vratar89@bk.ru' => 'Viktor'])
+
+        ->setTo([$item['email'] => $item['name']])
+
+        ->setBody('Уважаемый, ' . $item['name']. '. У вас запланирована задача '.$item['date_term'].' на %время задачи%')
+    ;
+
+    $result = $mailer->send($message);
 }
-
-$transport = new Swift_SmtpTransport('smtp.example.org', 25);
-
-$message = new Swift_Message("Доброе утро!");
-$message->setTo([$item['email'] => ""]);
-$message->setBody("Вашу гифку «Кот и пылесос» посмотрело больше 1 млн!");
-$message->setFrom("mail@giftube.academy", "Tasks");
-
-// Отправка сообщения
-$mailer = new Swift_Mailer($transport);
-$mailer->send($message);
+// здесь указываем адрес администратора, который получит заявку с сайта
+// если получателей несколько, указываем в формате: ['receiver@domain.org', 'other@domain.org' => 'A NAME']
+// (там где 'A NAME' пишем любое имя, это ни на что не влияет)
+//$to = ['email_адрес_администратора' => 'ADMIN'];
+//$from = 'ваш_логин@домен_почтового_сервера_например_yandex.ru';
+//Отправитель from
+//$from = '';
+//Получатель to
+//$to = '';
+//if (!extension_loaded('openssl')) {
+//    echo "no openssl extension loaded.";
+//}
+//$emailLogin = "vratar1001@gmail.com";
+//$emailPassword = "Smile4Me1)))";
+//
+//$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465))
+//    ->setUsername($emailLogin)
+//    ->setPassword($emailPassword);
+////var_dump($transport);
+//$mailer = new Swift_Mailer($transport);
