@@ -41,10 +41,10 @@ if (!empty($resSql)) {
         $userName = 'Здравствуйте ' . $nameTo . "\n";
         $bodyText = $userName;
         foreach ($tasks as $task) {
-            $bodyText .= 'У вас запланирована задача ' . $task['name'] . "\n" . ' на ' . $task['date_term'] . '';
+            $bodyText .= 'У вас запланирована задача ' . $task['name'] . "\n" . 'на ' . $task['date_term'] . "\r\n";
         }
         $message = (new Swift_Message('Уведомление от сервиса «Дела в порядке»'))
-            ->setFrom(['vratar89@bk.ru' => 'Viktor'])
+            ->setFrom([$emailSwiftMailer => 'Viktor'])
             ->setTo([$emailTo => $nameTo])
             ->setBody($bodyText);
         $result = $mailer->send($message);
