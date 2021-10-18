@@ -10,3 +10,5 @@ vendor
 uploads/*
 !uploads/.gitkeep
 conndb.php
+connSwiftMailer.php
+composer.lock
