@@ -1,0 +1,20 @@
+{
+    "name": "academy/things-are-in-order",
+    "description": "Put things in order",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Academy\\ThingsAreInOrder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Obyedkov",
+            "email": "vratar1001@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}
