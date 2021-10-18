@@ -24,7 +24,7 @@ $noTasks = mysqli_query($conn,
 
 $resSql = mysqli_fetch_all($noTasks, MYSQLI_ASSOC);
 
-if (isset($resSql)) {
+if (empty($resSql)) {
     foreach ($resSql as $item) {
         if (!empty($item['user_id'])) {
             $array[$item['user_id']][] = [
@@ -36,14 +36,16 @@ if (isset($resSql)) {
         }
     }
     foreach ($array as $userId => $tasks) {
-        $userName = 'Здравствуйте ' . $tasks[0]['user_name'] . "\n";
+        $emailTo = $tasks[0]["email"];
+        $nameTo = $tasks[0]["user_name"];
+        $userName = 'Здравствуйте ' . $nameTo . "\n";
         $bodyText = $userName;
         foreach ($tasks as $task) {
             $bodyText .= 'У вас запланирована задача ' . $task['name'] . "\n" . ' на ' . $task['date_term'] . '';
         }
         $message = (new Swift_Message('Уведомление от сервиса «Дела в порядке»'))
             ->setFrom(['vratar89@bk.ru' => 'Viktor'])
-            ->setTo(['vratar1001@gmail.com' => 'Артем'])
+            ->setTo([$emailTo => $nameTo])
             ->setBody($bodyText);
         $result = $mailer->send($message);
         if (!extension_loaded('openssl')) {
