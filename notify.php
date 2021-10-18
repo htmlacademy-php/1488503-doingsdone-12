@@ -24,7 +24,7 @@ $noTasks = mysqli_query($conn,
 
 $resSql = mysqli_fetch_all($noTasks, MYSQLI_ASSOC);
 
-if (empty($resSql)) {
+if (!empty($resSql)) {
     foreach ($resSql as $item) {
         if (!empty($item['user_id'])) {
             $array[$item['user_id']][] = [
