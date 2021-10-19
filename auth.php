@@ -20,7 +20,7 @@ if ($_POST) {
     if (!empty($_REQUEST['email'] and !empty($_REQUEST['password']))) {
         $email = $_REQUEST['email'];
         $password = $_REQUEST['password'];
-        $checkUser = mysqli_query($conn, "SELECT * FROM `users` WHERE email= '$email'"); //*AND password='$password'");
+        $checkUser = mysqli_query($conn, "SELECT * FROM `users` WHERE email= '$email'");
         if (mysqli_num_rows($checkUser) > 0) {
             $user = mysqli_fetch_assoc($checkUser);
             if (password_verify($password, $user['password'])) {

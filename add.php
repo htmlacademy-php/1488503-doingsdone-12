@@ -86,7 +86,7 @@ if (isset($_SESSION['user'])) {
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
             $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
-        VALUES ('$user','$project','$name','$file','$current_date','$date')";
+            VALUES ('$user','$project','$name','$file','$current_date','$date')";
             if (mysqli_query($conn, $addTasks)) {
                 header('Location:index.php');
             }

@@ -19,6 +19,7 @@ function countTasksForCategory($conn, $categoryId)
     return $result['count'];
 
 }
+
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
     $categories = [];
@@ -49,10 +50,10 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             $where = "AND date_term <= '$date_end' ";
         }
     }
-    if (isset($_GET['show_completed'])){
+    if (isset($_GET['show_completed'])) {
         $show_complete_tasks = intval($_GET['show_completed']);
     }
-    if ($show_complete_tasks == 0){
+    if ($show_complete_tasks == 0) {
         $where .= " AND (status is null or status !=1) ";
     }
     $bodyBackground = true;
