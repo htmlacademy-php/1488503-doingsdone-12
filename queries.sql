@@ -1,7 +1,9 @@
-USE things_are_in_order;
+USE
+things_are_in_order;
 
 INSERT INTO `users` (`email`, `password`, `name`, `date_create`)
-VALUES ('html@gmail.com', '1234', 'Виктор', '2021-05-31 12:44:12'),('Ivanov@gmail.com','123','Иван','2021-06-08 12:20:12');
+VALUES ('html@gmail.com', '1234', 'Виктор', '2021-05-31 12:44:12'),
+       ('Ivanov@gmail.com', '123', 'Иван', '2021-06-08 12:20:12');
 
 INSERT INTO `projects` (`user_id`, `name`)
 VALUES (1, 'Входящие'),

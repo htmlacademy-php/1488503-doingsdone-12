@@ -19,8 +19,8 @@
         <form class="form" action="form-project.php" method="post" autocomplete="off">
             <div class="form__row">
                 <label class="form__label" for="project_name">Название <sup>*</sup></label>
-                <?php $classname = isset($errors['name']) ? "form__input--error" : "";?>
-                <input class="form__input <?= $classname?>" type="text" name="name" id="project_name" value=""
+                <?php $classname = isset($errors['name']) ? "form__input--error" : ""; ?>
+                <input class="form__input <?= $classname ?>" type="text" name="name" id="project_name" value=""
                        placeholder="Введите название проекта">
             </div>
             <div class="form__row form__row--controls">

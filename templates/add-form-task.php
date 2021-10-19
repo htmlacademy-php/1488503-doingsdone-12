@@ -34,7 +34,7 @@
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
                 <select class="form__input <?= $classname ?>" name="project" id="project">
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?=$category['project_id']?>"><?= $category['name'] ?></option>
+                        <option value="<?= $category['project_id'] ?>"><?= $category['name'] ?></option>
                     <?php endforeach; ?>
                 </select>
                 <p class="form__message"><?= $errors['project'] ?? ""; ?></p>
