@@ -3,12 +3,8 @@ session_start();
 //  Подключение файл  //
 include 'helpers.php';
 include 'conndb.php';
-//* Подключение базы данных *//
-$conn = new mysqli($hostname, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8");
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+mysqli_set_charset($conn, 'utf8');
 
 function countTasksForCategory($conn, $categoryId)
 {
@@ -51,32 +47,26 @@ if (isset($_SESSION['user'])) {
         ];
         foreach ($formArrays as $formArray) {
 
-            if ($formArray === 'date') {
+            if ($formArray === 'date' && isset($postDate)) {
+                $errors[$formArray] = "Не существует";
                 $dateTodayFormatted = time();
                 $postDate = strtotime($_POST[$formArray]);
-                if (isset($postDate)){
-                    $errors[$formArray] = "Не существует";
-                };
                 if ($postDate <= $dateTodayFormatted) {
                     $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
                 }
             }
-
-            if ($formArray === 'project' || !in_array($_POST[$formArray], $projectIds)) {
-                $errors[$formArray] = 'Такого проекта нет';
+            if ($formArray === 'date' || !in_array('date', $formArrays)){
+                $errors[$formArray] = "Даты не выбрали";
             }
-
-            if (empty($_POST[$formArray])) {
-                $errors[$formArray] = 'Поле не заполнено';
+            if ($formArray === 'name' || !in_array('name' , $formArrays)){
+                $errors[$formArray] = "Вы не написал название проект";
             }
-
         }
 
         if (!empty($_FILES['file']['name'])) {
             $file_name = $_FILES['file']['name'];
             $file_path = __DIR__ . '/uploads/';
             $file_url = $_SERVER['DOCUMENT_ROOT'] . '/uploads/' . $file_name;
-            var_dump($file_url);
             move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
         }
 

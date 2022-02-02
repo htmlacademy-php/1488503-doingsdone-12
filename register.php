@@ -1,13 +1,8 @@
 <?php
 include 'conndb.php';
 include 'helpers.php';
-
-$conn = new mysqli($hostname, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8");
-
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+mysqli_set_charset($conn, 'utf8');
 $errors = [];
 
 if (!empty($_POST)) {

@@ -4,7 +4,6 @@
         <nav class="main-navigation">
             <ul class="main-navigation__list">
                 <?php foreach ($categories as $item) : ?>
-                <?=var_dump($projectId)?>
                     <li class="main-navigation__list-item <?php if ($item['project_id'] == $projectId): ?> main-navigation__list-item--active <?php endif ?>">
                         <a class="main-navigation__list-item-link" href="index.php"><?= $item['name'] ?></a>
                         <span class="main-navigation__list-item-count"><?= $item['count'] ?></span>

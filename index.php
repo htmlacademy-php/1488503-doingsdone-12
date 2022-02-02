@@ -2,13 +2,10 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+mysqli_set_charset($conn, 'utf8');
 $errors = [];
 $projectId = null;
-$conn = new mysqli($hostname, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8");
 
 function countTasksForCategory($conn, $categoryId)
 {
