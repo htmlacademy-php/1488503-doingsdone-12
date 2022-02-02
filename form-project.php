@@ -24,6 +24,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
 $user_id = $_SESSION['user']['id'];
 $query  = "SELECT * FROM `projects` where user_id = ? ";
 $data = [$user_id];
+
 $stmt = db_get_prepare_stmt($conn,$query,$data);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -41,8 +42,11 @@ $errors['name'] = "поле пустое";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['name'])) {
     $name = $_POST['name'];
-    $addProject = "INSERT INTO `projects`(`user_id`,`name`) VALUES ('$user_id','$name')";
-    if (mysqli_query($conn, $addProject)) {
+    $data = [$user_id,$name];
+    $addProject = 'INSERT INTO `projects`(`user_id`,`name`) VALUES (?,?)';
+    $stmt = db_get_prepare_stmt($conn,$addProject,$data);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result) {
         header('Location:index.php');
     }
 }
