@@ -1,12 +1,10 @@
 <?php
 session_start();
+//  Подключение файл  //
 include 'helpers.php';
 include 'conndb.php';
-$conn = new mysqli($servername, $username, $password, $database);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8");
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+mysqli_set_charset($conn, 'utf8');
 
 function countTasksForCategory($conn, $categoryId)
 {
@@ -49,32 +47,26 @@ if (isset($_SESSION['user'])) {
         ];
         foreach ($formArrays as $formArray) {
 
-            if ($formArray === 'date') {
+            if ($formArray === 'date' && isset($postDate)) {
+                $errors[$formArray] = "Не существует";
                 $dateTodayFormatted = time();
                 $postDate = strtotime($_POST[$formArray]);
                 if ($postDate <= $dateTodayFormatted) {
                     $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
                 }
             }
-
-            if ($formArray === 'project') {
-
-                if (!in_array($_POST[$formArray], $projectIds)) {
-                    $errors[$formArray] = 'Такого проекта нет';
-                }
-
+            if ($formArray === 'date' || !in_array('date', $formArrays)){
+                $errors[$formArray] = "Даты не выбрали";
             }
-
-            if (empty($_POST[$formArray])) {
-                $errors[$formArray] = 'Поле не заполнено';
+            if ($formArray === 'name' || !in_array('name' , $formArrays)){
+                $errors[$formArray] = "Вы не написал название проект";
             }
-
         }
 
         if (!empty($_FILES['file']['name'])) {
             $file_name = $_FILES['file']['name'];
             $file_path = __DIR__ . '/uploads/';
-            $file_url = 'https://1488503-doingsdone-12/uploads/' . $file_name;
+            $file_url = $_SERVER['DOCUMENT_ROOT'] . '/uploads/' . $file_name;
             move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
         }
 
@@ -85,7 +77,7 @@ if (isset($_SESSION['user'])) {
             $date = $_POST['date'] . ' 00:00:00';
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
-            $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
+            $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`)
             VALUES ('$user','$project','$name','$file','$current_date','$date')";
             if (mysqli_query($conn, $addTasks)) {
                 header('Location:index.php');
