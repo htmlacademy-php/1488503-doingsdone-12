@@ -1,12 +1,10 @@
 <?php
 session_start();
-ini_set('display_errors', '0');
-error_reporting(E_ALL);
 include 'helpers.php';
 include 'conndb.php';
 $errors = [];
 $projectId = null;
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($hostname, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }

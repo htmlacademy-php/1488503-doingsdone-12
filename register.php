@@ -2,7 +2,7 @@
 include 'conndb.php';
 include 'helpers.php';
 
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($hostname, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -51,7 +51,7 @@ if (!empty($_POST)) {
         $date = new DateTime();
         $createDate = date_format($date, 'Y-m-d H:i:s');
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`) 
+        $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`)
             VALUES ('$email', '$passwordHash','$name', '$createDate')";
         if (mysqli_query($conn, $addRegister)) {
             header('Location:index.php');
