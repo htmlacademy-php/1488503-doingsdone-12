@@ -2,7 +2,7 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($hostname, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }

@@ -1,8 +1,10 @@
 <?php
 session_start();
+//  Подключение файл  //
 include 'helpers.php';
 include 'conndb.php';
-$conn = new mysqli($servername, $username, $password, $database);
+//* Подключение базы данных *//
+$conn = new mysqli($hostname, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -52,17 +54,16 @@ if (isset($_SESSION['user'])) {
             if ($formArray === 'date') {
                 $dateTodayFormatted = time();
                 $postDate = strtotime($_POST[$formArray]);
+                if (isset($postDate)){
+                    $errors[$formArray] = "Не существует";
+                };
                 if ($postDate <= $dateTodayFormatted) {
                     $errors[$formArray] = 'Дата должна быть больше или равна текущей.';
                 }
             }
 
-            if ($formArray === 'project') {
-
-                if (!in_array($_POST[$formArray], $projectIds)) {
-                    $errors[$formArray] = 'Такого проекта нет';
-                }
-
+            if ($formArray === 'project' || !in_array($_POST[$formArray], $projectIds)) {
+                $errors[$formArray] = 'Такого проекта нет';
             }
 
             if (empty($_POST[$formArray])) {
@@ -74,7 +75,8 @@ if (isset($_SESSION['user'])) {
         if (!empty($_FILES['file']['name'])) {
             $file_name = $_FILES['file']['name'];
             $file_path = __DIR__ . '/uploads/';
-            $file_url = 'https://1488503-doingsdone-12/uploads/' . $file_name;
+            $file_url = $_SERVER['DOCUMENT_ROOT'] . '/uploads/' . $file_name;
+            var_dump($file_url);
             move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
         }
 
@@ -85,7 +87,7 @@ if (isset($_SESSION['user'])) {
             $date = $_POST['date'] . ' 00:00:00';
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
-            $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`) 
+            $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`)
             VALUES ('$user','$project','$name','$file','$current_date','$date')";
             if (mysqli_query($conn, $addTasks)) {
                 header('Location:index.php');
