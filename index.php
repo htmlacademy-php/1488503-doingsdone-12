@@ -2,18 +2,9 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
-$conn = mysqli_connect($hostname, $username, $password, $dbname);
-mysqli_set_charset($conn, 'utf8');
+
 $errors = [];
 $projectId = null;
-
-function countTasksForCategory($conn, $categoryId)
-{
-    $sql = 'SELECT count(*) as count FROM tasks WHERE project_id =' . $categoryId;
-    $result = mysqli_query($conn, $sql)->fetch_assoc();
-    return $result['count'];
-
-}
 
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
@@ -58,9 +49,9 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
         $tasks_id = intval($_GET['task_id']);
         mysqli_query($conn, "UPDATE `tasks` SET status = $status  WHERE id = '$tasks_id'");
     }
-    $sqlProject = "SELECT * FROM `projects` where user_id = '$user_id'";
-    $result = mysqli_query($conn, $sqlProject);
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    $sqlProject = "SELECT * FROM `projects` where user_id = ?";
+    $rows =  getSQL($conn, $sqlProject, $user_id);
 
     foreach ($rows as $row) {
         $count = countTasksForCategory($conn, $row['id']);

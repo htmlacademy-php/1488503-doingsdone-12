@@ -2,8 +2,6 @@
 session_start();
 include 'helpers.php';
 include 'conndb.php';
-$conn = mysqli_connect($hostname, $username, $password, $dbname);
-mysqli_set_charset($conn, 'utf8');
 
 $required_fields = ['email', 'password'];
 $errors = [];

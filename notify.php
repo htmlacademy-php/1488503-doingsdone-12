@@ -2,8 +2,6 @@
 require('vendor/autoload.php');
 include 'conndb.php';
 require_once 'connSwiftMailer.php';
-$conn = mysqli_connect($hostname, $username, $password, $dbname);
-mysqli_set_charset($conn, 'utf8');
 $transport = (new Swift_SmtpTransport('smtp.mail.ru', 465, 'ssl'))
     ->setUsername($emailSwiftMailer)
     ->setPassword($passwordSwiftMailer);

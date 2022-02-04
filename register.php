@@ -1,8 +1,7 @@
 <?php
 include 'conndb.php';
 include 'helpers.php';
-$conn = mysqli_connect($hostname, $username, $password, $dbname);
-mysqli_set_charset($conn, 'utf8');
+
 $errors = [];
 
 if (!empty($_POST)) {
@@ -46,9 +45,13 @@ if (!empty($_POST)) {
         $date = new DateTime();
         $createDate = date_format($date, 'Y-m-d H:i:s');
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $data = [$email, $passwordHash,$name, $createDate];
         $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`)
-            VALUES ('$email', '$passwordHash','$name', '$createDate')";
-        if (mysqli_query($conn, $addRegister)) {
+                        VALUES (?,?,?,?)";
+        $stmt = db_get_prepare_stmt($conn,$addRegister, $data);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result) {
             header('Location:index.php');
         }
     }

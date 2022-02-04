@@ -3,15 +3,6 @@ session_start();
 //  Подключение файл  //
 include 'helpers.php';
 include 'conndb.php';
-$conn = mysqli_connect($hostname, $username, $password, $dbname);
-mysqli_set_charset($conn, 'utf8');
-
-function countTasksForCategory($conn, $categoryId)
-{
-    $sql = 'SELECT count(*) as count FROM tasks WHERE project_id =' . $categoryId;
-    $result = mysqli_query($conn, $sql)->fetch_assoc();
-    return $result['count'];
-}
 
 if (isset($_SESSION['user'])) {
 
@@ -20,11 +11,8 @@ if (isset($_SESSION['user'])) {
     $tasks = [];
     $projectIds = [];
     $user_id = $_SESSION['user']['id'];
-    $sqlProject = "SELECT * FROM projects WHERE user_id = '$user_id'";
-    $result = mysqli_query($conn, $sqlProject);
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
+    $sqlProject = "SELECT * FROM projects WHERE user_id = ? ";
+    $rows = getSQL($conn,$sqlProject,$user_id);
     foreach ($rows as $row) {
         $count = countTasksForCategory($conn, $row['id']);
         $categories[] = [
@@ -77,9 +65,13 @@ if (isset($_SESSION['user'])) {
             $date = $_POST['date'] . ' 00:00:00';
             $current_date = date("Y.m.d H:i:s");
             $file = $file_url ?? null;
+            $data = [$user, $project, $name, $file, $current_date, $date];
             $addTasks = " INSERT INTO `tasks` (`user_id`,`project_id`, `name`, `file`, `date_add`,`date_term`)
-            VALUES ('$user','$project','$name','$file','$current_date','$date')";
-            if (mysqli_query($conn, $addTasks)) {
+            VALUES (?,?,?,?,?,?)";
+            $stmt = db_get_prepare_stmt($conn,$addTasks,$data);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if ($result) {
                 header('Location:index.php');
             }
         }

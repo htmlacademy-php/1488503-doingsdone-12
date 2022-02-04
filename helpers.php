@@ -142,3 +142,17 @@ function include_template($name, array $data = []) {
 
     return $result;
 }
+
+function countTasksForCategory($conn, $categoryId)
+{
+    $sql = 'SELECT count(*) as count FROM tasks WHERE project_id =' . $categoryId;
+    $result = mysqli_query($conn, $sql)->fetch_assoc();
+    return $result['count'];
+}
+function getSQL($conn,$query,$data){
+    $data = [$data];
+    $stmt = db_get_prepare_stmt($conn,$query,$data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
