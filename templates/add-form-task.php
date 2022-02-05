@@ -25,7 +25,7 @@
             <div class="form__row">
                 <?php $classname = isset($errors['name']) ? "form__input--error" : ""; ?>
                 <label class="form__label" for="name">Название <sup>*</sup></label>
-                <input class="form__input <?= $classname ?>" type="text" name="name" id="name" value=""
+                <input class="form__input <?= $classname ?>" type="text" name="name" id="name" value="<?= $old['name'] ?? '' ?>"
                        placeholder="Введите название">
                 <p class="form__message"><?= $errors['name'] ?? ""; ?></p>
             </div>
@@ -34,15 +34,15 @@
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
                 <select class="form__input <?= $classname ?>" name="project" id="project">
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?= $category['project_id'] ?>"><?= $category['name'] ?></option>
+                        <option value="<?= $category['project_id'] ?>" <?= $old['project'] ?? null === $category['project_id'] ? 'selected' : '' ?>><?= $category['name'] ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p class="form__message"><?= $errors['project'] ?? ""; ?></p>
+                <p class="form__message"><?= $errors['project'] ?? "" ?></p>
             </div>
             <div class="form__row">
                 <?php $classname = isset($errors['date']) ? "form__input--error" : ""; ?>
                 <label class="form__label" for="date">Дата выполнения</label>
-                <input class="form__input <?= $classname ?>" type="text" name="date" id="date" value=""
+                <input class="form__input <?= $classname ?>" type="text" name="date" id="date" value="<?= $old['date'] ?? '' ?>"
                        placeholder="Введите дату в формате ГГГГ-ММ-ДД">
                 <p class="form__message"><?= $errors['date'] ?? ""; ?></p>
             </div>
