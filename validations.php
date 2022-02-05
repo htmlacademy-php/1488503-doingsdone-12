@@ -2,11 +2,24 @@
 require_once 'helpers.php';
 require_once 'conndb.php';
 
+// Функция является "точкой входа" во всю валидацию.
 function validate(array $inputArray, array $validationRules, $dbConnection): array
 {
+    // Объявим массив ошибок, который в итоге вернем в ответ.
     $errors = [];
+
+//    Пройдемся по всему списку валидаций. Он выглядит примерно так
+//    [
+//        'Поле' => ['проверка1', 'проверка 2']
+//    ]
     foreach ($validationRules as $field => $rules) {
+
+        // Так как у нас условия - массив
         foreach($rules as $rule) {
+
+            // У нас возможно передавать дополнительные параметры в функцию
+            // Для этого используется формат названиеПроверки:<параметр>,<параметр2>,<парамер3>
+            // Вытащим из правила название и параметры.
             $ruleParameters = explode(':', $rule);
             $ruleName = $ruleParameters[0];
             $ruleName = 'validate' . ucfirst($ruleName);
@@ -15,17 +28,22 @@ function validate(array $inputArray, array $validationRules, $dbConnection): arr
                 $parameters = explode(',', $ruleParameters[1]);
             }
 
+            // Здесь мы проверим, что функция для проверки существует. Если нет - разработчик ошибся.
+            // Предупредим его здесь
             if (!function_exists($ruleName)) {
                 throw new Exception("Валидации {$ruleName} не существует. Пожалуйста, не забудьте добавить ее");
             }
 
+            // Вызовем эту функцию со стандартными параметрами и параметрами, которые разработчик передал дополнительно.
             $errors[$field] = call_user_func_array($ruleName, array_merge([$inputArray, $field, $dbConnection], $parameters));
         }
     }
 
+    // Так как у нас появится валидация для всех полей - отфильтруем ее только для тех полей, где она не прошла.
     return array_filter($errors);
 }
 
+// Простейшая функция
 function validateRequired(array $inputArray, string $field, $dbConnection): ?string
 {
     if (!isset($inputArray[$field])) {
@@ -98,4 +116,13 @@ function validateExists(array $inputArray, string $field, $dbConnection, $table,
 
     return count($rows) > 0 ? null : 'Выбранное значение должно существовать в базе данных';
 
+}
+
+function validateEmail(array $inputArray, string $field, $dbConnection): ?string
+{
+    if (!isset($inputArray[$field])) {
+        return null;
+    }
+
+    return filter_var(FILTER_VALIDATE_EMAIL, $inputArray[$field]);
 }
