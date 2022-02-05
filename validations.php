@@ -124,5 +124,5 @@ function validateEmail(array $inputArray, string $field, $dbConnection): ?string
         return null;
     }
 
-    return filter_var(FILTER_VALIDATE_EMAIL, $inputArray[$field]);
+    return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL);
 }

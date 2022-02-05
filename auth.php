@@ -31,6 +31,7 @@ if (count($errors) === 0) {
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     if (password_verify($_REQUEST['password'], $user['password'])) {
+        $_SESSION['user'] = $user;
         header('Location: /index.php');
         exit();
     }
