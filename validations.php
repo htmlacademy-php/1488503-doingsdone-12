@@ -124,5 +124,5 @@ function validateEmail(array $inputArray, string $field, $dbConnection): ?string
         return null;
     }
 
-    return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL);
+    return filter_var($inputArray[$field], FILTER_VALIDATE_EMAIL) === false ? 'Введите корректный email' : null;
 }
