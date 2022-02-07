@@ -1,62 +1,47 @@
 <?php
-include 'conndb.php';
-include 'helpers.php';
 
-$conn = new mysqli($servername, $username, $password, $database);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8");
-
+require_once 'conndb.php';
+require_once 'helpers.php';
+require_once 'validations.php';
 $errors = [];
 
-if (!empty($_POST)) {
-    $formArrays = [
-        'email',
-        'password',
-        'name',
-    ];
+if (empty ($_POST)) {
+    $mainContent = include_template('register.php', [
+        'errors' => $errors,
+    ]);
+    echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
+    return;
+}
 
-    foreach ($formArrays as $formArray) {
-        if ($formArray === 'email') {
-            if (filter_var($_POST[$formArray], FILTER_VALIDATE_EMAIL) === false) {
-                $errors[$formArray] = 'Вы не ввели Email';
-            }
-            $what = mysqli_real_escape_string($conn, $_POST[$formArray]);
-            $duplicateEmail = "SELECT COUNT(*) FROM `users` WHERE email = '$what'";
+$rules = [
+    'email' => ['required', 'email', 'exists:users,email'],
+    'password' => ['required', 'min:6'],
+    'name' => ['required'],
+];
 
-            $RES = mysqli_query($conn, $duplicateEmail);
+$errors = validate($_POST, $rules, $conn);
 
-            if (!$RES) {
-                $error = mysqli_error($conn);
-                print("Ошибка MySQL: " . $error);
-            } else {
-                if ($row = mysqli_fetch_row($RES)) {
-                    if ($row[0] > 0) {
-                        $errors[$formArray] = 'Вы уже зарегистрировали!';
-                    }
-                }
-            }
-
-        }
-        if (empty($_POST[$formArray])) {
-            $errors[$formArray] = 'Поле не заполнено';
-        }
-    }
-
-    if (empty($errors)) {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $date = new DateTime();
-        $createDate = date_format($date, 'Y-m-d H:i:s');
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`) 
-            VALUES ('$email', '$passwordHash','$name', '$createDate')";
-        if (mysqli_query($conn, $addRegister)) {
-            header('Location:index.php');
-        }
-    }
+if (count($errors) === 0) {
+    $mainContent = include_template('register.php', [
+        'errors' => $errors,
+    ]);
+    echo include_template('layout.php', ['title' => 'Дела в порядке', 'content' => $mainContent]);
+    return;
+}
+$name = $_POST['name'];
+$email = $_POST['email'];
+$password = $_POST['password'];
+$date = new DateTime();
+$createDate = date_format($date, 'Y-m-d H:i:s');
+$passwordHash = password_hash($password, PASSWORD_DEFAULT);
+$data = [$email, $passwordHash, $name, $createDate];
+$addRegister = "INSERT INTO `users` ( `email`, `password`, `name`,`date_create`)
+                        VALUES (?,?,?,?)";
+$stmt = db_get_prepare_stmt($conn, $addRegister, $data);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+if ($result) {
+    header('Location:index.php');
 
 }
 
