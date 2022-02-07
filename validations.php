@@ -15,11 +15,7 @@ function validate(array $inputArray, array $validationRules, $dbConnection): arr
     foreach ($validationRules as $field => $rules) {
 
         // Так как у нас условия - массив
-        foreach($rules as $rule) {
-
-            // У нас возможно передавать дополнительные параметры в функцию
-            // Для этого используется формат названиеПроверки:<параметр>,<параметр2>,<парамер3>
-            // Вытащим из правила название и параметры.
+        foreach ($rules as $rule) {
             $ruleParameters = explode(':', $rule);
             $ruleName = $ruleParameters[0];
             $ruleName = 'validate' . ucfirst($ruleName);
@@ -27,23 +23,17 @@ function validate(array $inputArray, array $validationRules, $dbConnection): arr
             if (isset($ruleParameters[1])) {
                 $parameters = explode(',', $ruleParameters[1]);
             }
-
-            // Здесь мы проверим, что функция для проверки существует. Если нет - разработчик ошибся.
-            // Предупредим его здесь
             if (!function_exists($ruleName)) {
                 throw new Exception("Валидации {$ruleName} не существует. Пожалуйста, не забудьте добавить ее");
             }
 
-            // Вызовем эту функцию со стандартными параметрами и параметрами, которые разработчик передал дополнительно.
             $errors[$field] = call_user_func_array($ruleName, array_merge([$inputArray, $field, $dbConnection], $parameters));
         }
     }
 
-    // Так как у нас появится валидация для всех полей - отфильтруем ее только для тех полей, где она не прошла.
     return array_filter($errors);
 }
 
-// Простейшая функция
 function validateRequired(array $inputArray, string $field, $dbConnection): ?string
 {
     if (!isset($inputArray[$field])) {
@@ -100,23 +90,36 @@ function validateAfter(array $inputArray, string $field, $dbConnection, $date): 
     return strtotime($date) <= strtotime($inputArray[$field]) ? null : "Дата должна быть позже {$date}";
 }
 
+
 function validateExists(array $inputArray, string $field, $dbConnection, $table, $dbField): ?string
 {
     if (!isset($inputArray[$field])) {
         return null;
     }
-
-    // Здесь можно использовать формирование строки из введенных параметров, так как
-    // эти параметры задаются в коде и не могут быть введены пользователем
-    $query = "select * from {$table} where {$dbField} = ? limit 1";
-    $stmt = db_get_prepare_stmt($dbConnection, $query, [$inputArray[$field]]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
+    $rows = getValueFromDatabase($dbConnection, $table, $field);
     return count($rows) > 0 ? null : 'Выбранное значение должно существовать в базе данных';
 
 }
+
+function validateUnique(array $inputArray, string $field, $dbConnection, $table, $dbField): ?string
+{
+    if (!isset($inputArray[$field])) {
+        return null;
+    }
+    $rows = getValueFromDatabase($dbConnection, $table, $inputArray);
+    return count($rows) === 0 ? null : 'Данное значение в базе уже присутствует';
+
+}
+
+function getValueFromDatabase($dbConnection, $table, $data): array
+{
+    $query = "select * from {$table} where email = ? limit 1";
+    $stmt = db_get_prepare_stmt($dbConnection, $query, [$data]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 
 function validateEmail(array $inputArray, string $field, $dbConnection): ?string
 {
