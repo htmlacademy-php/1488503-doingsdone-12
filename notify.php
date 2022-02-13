@@ -2,14 +2,11 @@
 require('vendor/autoload.php');
 include 'conndb.php';
 require_once 'connSwiftMailer.php';
-$conn = new mysqli($servername, $username, $password, $database);
 $transport = (new Swift_SmtpTransport('smtp.mail.ru', 465, 'ssl'))
     ->setUsername($emailSwiftMailer)
     ->setPassword($passwordSwiftMailer);
 $mailer = new Swift_Mailer($transport);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+
 //1. Выполнить SQL запрос на получение всех невыполненных задач (статус равен нулю), у которых срок равен текущему дню.
 $id = [];
 $array = [];
