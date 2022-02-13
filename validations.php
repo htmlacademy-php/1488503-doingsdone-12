@@ -96,7 +96,7 @@ function validateExists(array $inputArray, string $field, $dbConnection, $table,
     if (!isset($inputArray[$field])) {
         return null;
     }
-    $rows = getValueFromDatabase($dbConnection, $table, $field);
+    $rows = getValueFromDatabase($dbConnection, $table, $dbField, $inputArray[$field]);
     return count($rows) > 0 ? null : 'Выбранное значение должно существовать в базе данных';
 
 }
@@ -106,15 +106,15 @@ function validateUnique(array $inputArray, string $field, $dbConnection, $table,
     if (!isset($inputArray[$field])) {
         return null;
     }
-    $rows = getValueFromDatabase($dbConnection, $table, $inputArray);
+    $rows = getValueFromDatabase($dbConnection, $table, $dbField, $inputArray[$field]);
     return count($rows) === 0 ? null : 'Данное значение в базе уже присутствует';
 
 }
 
-function getValueFromDatabase($dbConnection, $table, $data): array
+function getValueFromDatabase($con, $table, $field, $value): array
 {
-    $query = "select * from {$table} where email = ? limit 1";
-    $stmt = db_get_prepare_stmt($dbConnection, $query, [$data]);
+    $query = "select * from {$table} where {$field} = ? limit 1";
+    $stmt = db_get_prepare_stmt($con, $query, [$value]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
